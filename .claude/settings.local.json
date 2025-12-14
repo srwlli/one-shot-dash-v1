@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__docs-mcp__list_context_experts",
+      "mcp__docs-mcp__execute_plan",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm ls:*)",
+      "Bash(dir:*)",
+      "Bash(npm run package:*)"
+    ]
+  }
+}

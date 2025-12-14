@@ -1,0 +1,64 @@
+appId: com.business.dashboard
+productName: Business Dashboard
+copyright: Copyright © 2024
+
+# Directories
+directories:
+  output: dist
+  buildResources: resources
+
+# Files to include
+files:
+  - dist/**/*
+  - package.json
+
+# Extra resources (web app build)
+extraResources:
+  - from: ../web/out
+    to: web/out
+    filter:
+      - "**/*"
+
+# Disable code signing for development builds
+forceCodeSigning: false
+
+# Windows configuration
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  artifactName: "${productName}-${version}-Setup.${ext}"
+  signAndEditExecutable: false
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+
+# macOS configuration
+mac:
+  target:
+    - target: dmg
+      arch:
+        - x64
+        - arm64
+  icon: resources/icon.icns
+  category: public.app-category.productivity
+  artifactName: "${productName}-${version}-${arch}.${ext}"
+
+dmg:
+  title: "${productName} ${version}"
+  icon: resources/icon.icns
+
+# Linux configuration
+linux:
+  target:
+    - target: AppImage
+      arch:
+        - x64
+  icon: resources/icons
+  category: Office
+  artifactName: "${productName}-${version}.${ext}"
+
+# Publish configuration (disabled for now)
+publish: null

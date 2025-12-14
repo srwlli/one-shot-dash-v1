@@ -1,0 +1,31 @@
+{
+  "name": "@platform/core",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "src"],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts",
+    "dev": "tsup src/index.ts --format esm --dts --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/"
+  },
+  "dependencies": {
+    "@platform/sdk": "*",
+    "@platform/config": "*"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "react": "^19.0.0"
+  }
+}

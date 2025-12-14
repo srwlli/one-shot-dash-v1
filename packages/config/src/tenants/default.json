@@ -1,0 +1,11 @@
+{
+  "id": "default",
+  "name": "Business Dashboard",
+  "defaultLayout": "main-dashboard",
+  "layouts": ["main-dashboard"],
+  "features": {
+    "customizeDashboard": false,
+    "marketplace": false,
+    "darkMode": true
+  }
+}

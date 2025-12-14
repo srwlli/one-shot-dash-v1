@@ -1,0 +1,45 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowJs": true,
+    "noEmit": true,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@platform/sdk": [
+        "../../packages/sdk/src"
+      ],
+      "@platform/core": [
+        "../../packages/core/src"
+      ],
+      "@platform/ui": [
+        "../../packages/ui/src"
+      ],
+      "@platform/config": [
+        "../../packages/config/src"
+      ],
+      "@platform/widgets": [
+        "../../packages/widgets/src"
+      ]
+    },
+    "incremental": true,
+    "jsx": "preserve"
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

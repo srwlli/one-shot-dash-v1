@@ -1,0 +1,26 @@
+{
+  "name": "desktop",
+  "version": "1.0.0",
+  "description": "Business Dashboard Desktop Application",
+  "author": "Business Dashboard Team",
+  "private": true,
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "tsc && electron .",
+    "build": "tsc",
+    "package": "electron-builder",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "electron-is-dev": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "electron": "33.2.1",
+    "electron-builder": "^25.1.8",
+    "typescript": "^5.7.2"
+  },
+  "build": {
+    "extends": "./electron-builder.yml"
+  }
+}

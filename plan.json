@@ -1,0 +1,911 @@
+{
+    "META_DOCUMENTATION": {
+        "feature_name": "business-dashboard-platform",
+        "schema_version": "1.0.0",
+        "version": "5.0.0",
+        "status": "approved",
+        "generated_by": "Lloyd (AI Coordinator)",
+        "generated_at": "2025-12-13",
+        "updated_at": "2025-12-13",
+        "approach": "FRESH_START",
+        "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+        "reference_mvp": "<OPTIONAL_REFERENCE>",
+        "version_history": [
+            {
+                "version": "4.1.0",
+                "date": "2025-12-12",
+                "notes": "Initial plan with Phase 10 Build & Package"
+            },
+            {
+                "version": "5.0.0",
+                "date": "2025-12-13",
+                "notes": "Updated with build lessons learned: corrected versions (Next.js 15, Electron 33), fixed Electron loading strategy (process.resourcesPath, !app.isPackaged), added build_gotchas section, fixed file extensions (.tsx for JSX), npm workspace protocol fix"
+            }
+        ]
+    },
+    "UNIVERSAL_PLANNING_STRUCTURE": {
+        "0_preparation": {
+            "project_type": "monorepo-hybrid-application",
+            "project_location": "<USER_PROVIDED>",
+            "technology_stack": {
+                "core": {
+                    "framework": "Next.js 15.x (App Router with Turbopack)",
+                    "runtime": "React 19.0.0",
+                    "language": "TypeScript 5.7+",
+                    "styling": "Tailwind CSS 4.x (requires @tailwindcss/postcss)",
+                    "monorepo": "Turborepo"
+                },
+                "platforms": {
+                    "web": "Standard Next.js Build",
+                    "desktop": "Electron 33.x",
+                    "mobile": "PWA (next-pwa)"
+                },
+                "components": {
+                    "ui": "shadcn/ui 0.9.5+",
+                    "theming": "next-themes 0.4.6+"
+                },
+                "package_manager": "npm"
+            },
+            "package_build_specs": {
+                "description": "Standardized package.json exports and build outputs",
+                "common_fields": {
+                    "type": "module",
+                    "main": "./dist/index.js",
+                    "types": "./dist/index.d.ts",
+                    "exports": {
+                        ".": {
+                            "types": "./dist/index.d.ts",
+                            "import": "./dist/index.js"
+                        }
+                    },
+                    "files": ["dist", "src"],
+                    "scripts": {
+                        "build": "tsup src/index.ts --format esm --dts",
+                        "dev": "tsup src/index.ts --format esm --dts --watch",
+                        "typecheck": "tsc --noEmit"
+                    }
+                },
+                "build_tool": "tsup (esbuild-based, zero config)",
+                "output_format": "ESM only (modern)",
+                "type_generation": "tsup --dts or tsc --emitDeclarationOnly"
+            },
+            "boundary_enforcement": {
+                "tool": "eslint-plugin-import + @typescript-eslint",
+                "rules": {
+                    "packages/widgets": {
+                        "allowed_imports": ["@platform/sdk", "react"],
+                        "forbidden_imports": ["@platform/core", "@platform/config", "electron"]
+                    },
+                    "packages/core": {
+                        "allowed_imports": ["@platform/sdk", "@platform/config", "react"],
+                        "forbidden_imports": ["@platform/widgets", "electron"]
+                    },
+                    "apps/web": {
+                        "forbidden_imports": ["electron"]
+                    }
+                },
+                "eslint_config_file": "eslint.config.js",
+                "enforcement": "CI fails on boundary violations"
+            },
+            "build_commands": {
+                "dev_all": "turbo dev",
+                "dev_web": "turbo dev --filter=web",
+                "dev_desktop": "turbo dev --filter=desktop",
+                "build_all": "turbo build",
+                "build_web": "turbo build --filter=web",
+                "build_desktop": "turbo build --filter=desktop",
+                "package_exe": "cd apps/desktop && electron-builder"
+            },
+            "electron_builder": {
+                "appId": "com.business.dashboard",
+                "productName": "Business Dashboard",
+                "output_directory": "apps/desktop/dist",
+                "targets": {
+                    "windows": "nsis (.exe installer)",
+                    "mac": "dmg",
+                    "linux": "AppImage"
+                },
+                "dev_build_settings": {
+                    "forceCodeSigning": false,
+                    "signAndEditExecutable": false,
+                    "note": "Required for builds without code signing certificates"
+                }
+            },
+            "electron_loading_strategy": {
+                "description": "How Electron loads the web app in dev vs production",
+                "dev_mode": {
+                    "method": "Load localhost URL",
+                    "url": "http://localhost:3000",
+                    "workflow": "Run 'turbo dev --filter=web' first, then 'turbo dev --filter=desktop'",
+                    "hot_reload": true,
+                    "detection": "!app.isPackaged (Electron API)"
+                },
+                "prod_mode": {
+                    "method": "Load static export from file://",
+                    "next_config": "output: 'export' (MUST be enabled in next.config.ts)",
+                    "path": "apps/web/out/index.html",
+                    "electron_loads": "path.join(process.resourcesPath, 'web', 'out', 'index.html')",
+                    "bundled_with": "extraResources in electron-builder.yml copies web/out automatically"
+                },
+                "build_workflow": [
+                    "1. Enable output: 'export' in apps/web/next.config.ts",
+                    "2. turbo build (builds all packages including web static export)",
+                    "3. cd apps/desktop && npm run build && npm run package",
+                    "4. electron-builder uses extraResources to bundle web/out"
+                ],
+                "main_ts_detection": "!app.isPackaged ? localhost : file:// (DO NOT use NODE_ENV - unreliable)"
+            },
+            "monorepo_structure": {
+                "./": "Monorepo root (user-provided directory)",
+                "package.json": "Workspace root (workspaces: apps/*, packages/*)",
+                "turbo.json": "Turborepo pipeline configuration",
+                "tsconfig.base.json": "Shared TypeScript configuration",
+                "apps/": "Deployable applications",
+                "apps/web/": "Next.js 16 web application",
+                "apps/web/package.json": "Web app dependencies",
+                "apps/web/next.config.ts": "Next.js configuration",
+                "apps/web/app/layout.tsx": "Root layout with PlatformProvider",
+                "apps/web/app/page.tsx": "Dashboard with LayoutEngine",
+                "apps/desktop/": "Electron desktop shell",
+                "apps/desktop/package.json": "Electron dependencies only",
+                "apps/desktop/electron-builder.yml": "Build configuration",
+                "apps/desktop/src/main.ts": "Electron main process",
+                "apps/desktop/src/preload.ts": "Secure bridge to renderer",
+                "apps/desktop/src/ipc/index.ts": "IPC handler registration",
+                "packages/": "Shared libraries",
+                "packages/core/": "Platform runtime",
+                "packages/core/package.json": "Core package manifest",
+                "packages/core/src/index.ts": "Public exports",
+                "packages/core/src/platform/PlatformProvider.tsx": "Platform context",
+                "packages/core/src/platform/capabilities.ts": "Platform detection",
+                "packages/core/src/dashboard/Dashboard.tsx": "Dashboard container",
+                "packages/core/src/dashboard/LayoutEngine.tsx": "Config-driven widget renderer",
+                "packages/core/src/dashboard/WidgetRegistry.ts": "Central widget registry",
+                "packages/sdk/": "Widget API contract",
+                "packages/sdk/package.json": "SDK package manifest",
+                "packages/sdk/src/index.ts": "Public exports",
+                "packages/sdk/src/types.ts": "Widget type definitions",
+                "packages/sdk/src/useWidget.tsx": "Widget context hook (JSX requires .tsx)",
+                "packages/widgets/": "Widget implementations",
+                "packages/widgets/package.json": "Widgets package manifest",
+                "packages/widgets/src/index.ts": "Widget barrel exports",
+                "packages/widgets/src/coming-soon-card/Widget.tsx": "Coming Soon Card",
+                "packages/widgets/src/coming-soon-card/manifest.ts": "Widget metadata",
+                "packages/widgets/src/theme-toggle/Widget.tsx": "Theme Toggle",
+                "packages/widgets/src/theme-toggle/manifest.ts": "Widget metadata",
+                "packages/ui/": "Design system (shadcn)",
+                "packages/ui/package.json": "UI package manifest",
+                "packages/ui/src/index.ts": "Component exports",
+                "packages/ui/src/components/": "shadcn components",
+                "packages/ui/src/styles/globals.css": "Tailwind + theme variables",
+                "packages/config/": "Configuration system",
+                "packages/config/package.json": "Config package manifest",
+                "packages/config/src/index.ts": "Config exports",
+                "packages/config/src/schema.ts": "Config type definitions",
+                "packages/config/src/tenants/default.json": "Default tenant layout",
+                "packages/config/src/layouts/dashboard.json": "Dashboard widget layout"
+            },
+            "architectural_rules": {
+                "never_break": [
+                    "Widgets import ONLY @platform/sdk",
+                    "Core never imports widgets (apps compose registry)",
+                    "Electron never imported in React code",
+                    "No tenant logic inside widgets",
+                    "Config drives everything"
+                ],
+                "dependency_graph": {
+                    "apps/web": ["@platform/core", "@platform/ui", "@platform/config", "@platform/widgets"],
+                    "apps/desktop": ["electron (loads apps/web output)"],
+                    "packages/core": ["@platform/sdk", "@platform/config"],
+                    "packages/widgets": ["@platform/sdk ONLY"],
+                    "packages/sdk": ["react (peer dependency)"],
+                    "packages/ui": ["tailwindcss", "react", "class-variance-authority"],
+                    "packages/config": ["zod (optional validation)"]
+                },
+                "registry_ownership": {
+                    "pattern": "Apps compose widgets into registry, core renders from registry",
+                    "example": "apps/web imports widgets, creates registry, passes to PlatformProvider"
+                }
+            }
+        },
+        "1_executive_summary": {
+            "feature_name": "Business Dashboard Platform",
+            "description": "A cross-platform (Web, Desktop, PWA) widget hosting platform built as a Turborepo monorepo with strict separation between apps, packages, SDK, and pluggable widgets.",
+            "goal": "Build a production-ready widget platform with config-driven layouts, multi-tenant support, and marketplace-ready architecture.",
+            "approach": "Fresh start with correct monorepo structure from day one.",
+            "scope": {
+                "in_scope": [
+                    "Phase 1: Monorepo Foundation (Turborepo + workspace)",
+                    "Phase 2: SDK Package (widget contract)",
+                    "Phase 3: UI Package (design system)",
+                    "Phase 4: Core Package (PlatformProvider, LayoutEngine, Registry)",
+                    "Phase 5: Config Package (layouts, tenants)",
+                    "Phase 6: Widgets Package (Coming Soon Card, Theme Toggle)",
+                    "Phase 7: Web App (Next.js with dashboard)",
+                    "Phase 8: Desktop App (Electron with IPC)",
+                    "Phase 9: PWA Support (manifest, service worker, icons)"
+                ],
+                "out_of_scope": [
+                    "Module Federation (Future)",
+                    "Widget Marketplace Loading (Future)",
+                    "Drag-and-drop Persistence (Future)",
+                    "Authentication (Future)",
+                    "Real Backend Integration (Future)"
+                ]
+            },
+            "estimated_complexity": "high",
+            "estimated_files": 45,
+            "estimated_loc": 2000
+        },
+        "2_risk_assessment": {
+            "technical_risks": [
+                {
+                    "risk": "Turborepo workspace resolution",
+                    "probability": "medium",
+                    "impact": "medium",
+                    "mitigation": "Use '*' for workspace dependencies (npm doesn't support workspace:* pnpm protocol)"
+                },
+                {
+                    "risk": "TypeScript path aliases across packages",
+                    "probability": "medium",
+                    "impact": "medium",
+                    "mitigation": "Consistent tsconfig.base.json, explicit exports in package.json"
+                },
+                {
+                    "risk": "Electron IPC security",
+                    "probability": "low",
+                    "impact": "high",
+                    "mitigation": "contextBridge + contextIsolation, no nodeIntegration"
+                }
+            ],
+            "dependency_risks": [],
+            "build_gotchas": [
+                {
+                    "issue": "npm doesn't support workspace:* protocol",
+                    "symptom": "EUNSUPPORTEDPROTOCOL error during npm install",
+                    "fix": "Use '*' instead of 'workspace:*' in package.json dependencies"
+                },
+                {
+                    "issue": "JSX in .ts files fails tsup build",
+                    "symptom": "Expected '>' but found 'value' error",
+                    "fix": "Rename files containing JSX from .ts to .tsx"
+                },
+                {
+                    "issue": "Tailwind CSS 4 requires separate PostCSS plugin",
+                    "symptom": "Cannot find module 'tailwindcss' during Next.js build",
+                    "fix": "Install @tailwindcss/postcss as devDependency in apps/web"
+                },
+                {
+                    "issue": "tsconfig incremental conflicts with tsup --dts",
+                    "symptom": "Option '--incremental' can only be specified using tsconfig",
+                    "fix": "Remove 'incremental: true' from tsconfig.base.json"
+                },
+                {
+                    "issue": "Electron loads wrong URL in production",
+                    "symptom": "500 error or wrong app loads",
+                    "fix": "Use process.resourcesPath (not __dirname) and !app.isPackaged (not NODE_ENV)"
+                },
+                {
+                    "issue": "electron-builder symlink errors on Windows",
+                    "symptom": "Cannot create symbolic link error during packaging",
+                    "fix": "Add forceCodeSigning: false and signAndEditExecutable: false to electron-builder.yml"
+                }
+            ]
+        },
+        "3_current_state_analysis": {
+            "starting_point": "Empty directory - fresh start",
+            "reference_implementation": {
+                "location": "<OPTIONAL_REFERENCE>",
+                "purpose": "Reference for widget component code only (if available)",
+                "reusable_code": [
+                    "Widget component JSX (coming-soon-card, theme-toggle)",
+                    "Tailwind CSS variable patterns",
+                    "Theme toggle logic"
+                ]
+            },
+            "files_to_create": [
+                {"path": "package.json", "purpose": "Workspace root with workspaces config"},
+                {"path": "turbo.json", "purpose": "Turborepo pipeline configuration"},
+                {"path": "tsconfig.base.json", "purpose": "Shared TypeScript configuration"},
+                {"path": ".gitignore", "purpose": "Git ignore patterns"},
+                {"path": "eslint.config.js", "purpose": "ESLint flat config with boundary rules"},
+                {"path": "apps/web/package.json", "purpose": "Next.js dependencies"},
+                {"path": "apps/web/tsconfig.json", "purpose": "Extends base, adds paths"},
+                {"path": "apps/web/next.config.ts", "purpose": "Next.js configuration"},
+                {"path": "apps/web/postcss.config.mjs", "purpose": "Tailwind PostCSS"},
+                {"path": "apps/web/app/layout.tsx", "purpose": "Root layout with providers"},
+                {"path": "apps/web/app/page.tsx", "purpose": "Dashboard with LayoutEngine"},
+                {"path": "apps/web/app/settings/page.tsx", "purpose": "Settings route"},
+                {"path": "apps/web/lib/registry.ts", "purpose": "App-level widget registry composition"},
+                {"path": "apps/desktop/package.json", "purpose": "Electron dependencies"},
+                {"path": "apps/desktop/tsconfig.json", "purpose": "Electron TypeScript config"},
+                {"path": "apps/desktop/electron-builder.yml", "purpose": "Build configuration"},
+                {"path": "apps/desktop/src/main.ts", "purpose": "Electron main process"},
+                {"path": "apps/desktop/src/preload.ts", "purpose": "Context bridge"},
+                {"path": "packages/sdk/package.json", "purpose": "SDK manifest"},
+                {"path": "packages/sdk/tsconfig.json", "purpose": "SDK TypeScript config"},
+                {"path": "packages/sdk/src/index.ts", "purpose": "SDK exports"},
+                {"path": "packages/sdk/src/types.ts", "purpose": "Widget type definitions"},
+                {"path": "packages/sdk/src/permissions.ts", "purpose": "Widget permissions types"},
+                {"path": "packages/sdk/src/events.ts", "purpose": "Widget lifecycle events"},
+                {"path": "packages/sdk/src/storage.ts", "purpose": "Widget storage interface"},
+                {"path": "packages/sdk/src/useWidget.tsx", "purpose": "Widget context hook (JSX)"},
+                {"path": "packages/sdk/src/useWidgetStorage.tsx", "purpose": "Widget storage hook (JSX)"},
+                {"path": "packages/sdk/src/useWidgetEvents.tsx", "purpose": "Widget events hook (JSX)"},
+                {"path": "packages/core/package.json", "purpose": "Core manifest"},
+                {"path": "packages/core/tsconfig.json", "purpose": "Core TypeScript config"},
+                {"path": "packages/core/src/index.ts", "purpose": "Core exports"},
+                {"path": "packages/core/src/platform/PlatformProvider.tsx", "purpose": "Platform context"},
+                {"path": "packages/core/src/platform/capabilities.ts", "purpose": "Platform detection"},
+                {"path": "packages/core/src/dashboard/WidgetRegistry.ts", "purpose": "Widget registry"},
+                {"path": "packages/core/src/dashboard/LayoutEngine.tsx", "purpose": "Widget renderer"},
+                {"path": "packages/core/src/dashboard/Dashboard.tsx", "purpose": "Dashboard container"},
+                {"path": "packages/widgets/package.json", "purpose": "Widgets manifest"},
+                {"path": "packages/widgets/tsconfig.json", "purpose": "Widgets TypeScript config"},
+                {"path": "packages/widgets/src/index.ts", "purpose": "Widget barrel exports"},
+                {"path": "packages/widgets/src/coming-soon-card/Widget.tsx", "purpose": "Coming Soon component"},
+                {"path": "packages/widgets/src/coming-soon-card/manifest.ts", "purpose": "Widget manifest"},
+                {"path": "packages/widgets/src/theme-toggle/Widget.tsx", "purpose": "Theme Toggle component"},
+                {"path": "packages/widgets/src/theme-toggle/manifest.ts", "purpose": "Widget manifest"},
+                {"path": "packages/ui/package.json", "purpose": "UI manifest"},
+                {"path": "packages/ui/tsconfig.json", "purpose": "UI TypeScript config"},
+                {"path": "packages/ui/src/index.ts", "purpose": "UI exports"},
+                {"path": "packages/ui/src/styles/globals.css", "purpose": "Tailwind + theme CSS"},
+                {"path": "packages/ui/src/lib/utils.ts", "purpose": "cn() helper"},
+                {"path": "packages/config/package.json", "purpose": "Config manifest"},
+                {"path": "packages/config/src/index.ts", "purpose": "Config exports"},
+                {"path": "packages/config/src/schema.ts", "purpose": "Config types"},
+                {"path": "packages/config/src/layouts/dashboard.json", "purpose": "Dashboard layout"},
+                {"path": "packages/config/src/tenants/default.json", "purpose": "Default tenant configuration"},
+                {"path": "packages/sdk/tsconfig.json", "purpose": "SDK TypeScript config extending base"},
+                {"path": "packages/core/tsconfig.json", "purpose": "Core TypeScript config extending base"},
+                {"path": "packages/widgets/tsconfig.json", "purpose": "Widgets TypeScript config extending base"},
+                {"path": "packages/config/tsconfig.json", "purpose": "Config TypeScript config extending base"},
+                {"path": "packages/ui/tsconfig.json", "purpose": "UI TypeScript config extending base"},
+                {"path": "apps/desktop/src/ipc/index.ts", "purpose": "IPC handler registration and exports"},
+                {"path": "apps/web/public/manifest.json", "purpose": "PWA web app manifest"},
+                {"path": "apps/web/public/icons/icon-192x192.png", "purpose": "PWA icon 192x192"},
+                {"path": "apps/web/public/icons/icon-512x512.png", "purpose": "PWA icon 512x512"}
+            ]
+        },
+        "4_key_features": {
+            "features": [
+                {
+                    "id": "F001",
+                    "name": "Monorepo Foundation",
+                    "description": "Turborepo workspace with apps/ and packages/ structure",
+                    "requirements": [
+                        "Root package.json with workspaces",
+                        "turbo.json with build/dev/lint pipelines",
+                        "Shared tsconfig.base.json",
+                        "All packages buildable independently"
+                    ]
+                },
+                {
+                    "id": "F002",
+                    "name": "SDK Package",
+                    "description": "Widget API contract - the ONLY thing widgets import",
+                    "requirements": [
+                        "WidgetManifest type (id, name, description, version, permissions)",
+                        "WidgetContext type (config, data, theme, capabilities)",
+                        "WidgetProps type",
+                        "WidgetPermissions type (storage, network, notifications)",
+                        "WidgetEvents type (onMount, onUnmount, onConfigChange)",
+                        "WidgetStorage interface (get, set, remove)",
+                        "useWidget() hook for accessing context",
+                        "useWidgetStorage() hook for persistent storage",
+                        "useWidgetEvents() hook for lifecycle events"
+                    ]
+                },
+                {
+                    "id": "F003",
+                    "name": "Core Package",
+                    "description": "Platform runtime that wires everything together",
+                    "requirements": [
+                        "PlatformProvider context (capabilities, tenant)",
+                        "capabilities.ts (isElectron, isWeb, isPWA)",
+                        "WidgetRegistry (register, get, getAll)",
+                        "LayoutEngine (renders widgets from config)",
+                        "Dashboard container component"
+                    ]
+                },
+                {
+                    "id": "F004",
+                    "name": "UI Package",
+                    "description": "Shared design system based on shadcn/ui",
+                    "requirements": [
+                        "Tailwind CSS 4 configuration",
+                        "CSS variables for theming",
+                        "cn() utility function",
+                        "Base component primitives"
+                    ]
+                },
+                {
+                    "id": "F005",
+                    "name": "Widgets Package",
+                    "description": "Widget implementations that import ONLY SDK",
+                    "requirements": [
+                        "Coming Soon Card widget + manifest",
+                        "Theme Toggle widget + manifest",
+                        "Each widget exports: Widget, manifest",
+                        "Zero imports from @platform/core"
+                    ]
+                },
+                {
+                    "id": "F006",
+                    "name": "Web Application",
+                    "description": "Next.js 16 app that consumes core and renders dashboard",
+                    "requirements": [
+                        "App Router with Turbopack",
+                        "PlatformProvider in root layout",
+                        "Dashboard page using LayoutEngine",
+                        "Settings page with theme toggle",
+                        "Static export support (output: 'export' for Electron)"
+                    ]
+                },
+                {
+                    "id": "F007",
+                    "name": "Config Package",
+                    "description": "JSON-driven layout and tenant configuration",
+                    "requirements": [
+                        "Layout schema (widgets array with positions)",
+                        "dashboard.json default layout",
+                        "Config loader utility",
+                        "Type-safe config access"
+                    ]
+                },
+                {
+                    "id": "F008",
+                    "name": "Desktop Application",
+                    "description": "Electron shell that loads web app securely",
+                    "requirements": [
+                        "main.ts creates BrowserWindow",
+                        "preload.ts with contextBridge",
+                        "Loads apps/web build output",
+                        "electron-builder.yml for packaging"
+                    ]
+                },
+                {
+                    "id": "F009",
+                    "name": "PWA Support",
+                    "description": "Progressive Web App configuration for installable web experience",
+                    "requirements": [
+                        "next-pwa package integration in apps/web",
+                        "Web app manifest (manifest.json) with app metadata",
+                        "Service worker configuration for caching",
+                        "App icons in multiple sizes (192x192, 512x512)",
+                        "Offline fallback page"
+                    ]
+                }
+            ]
+        },
+        "5_task_id_system": {
+            "workorder": {
+                "id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                "name": "Business Dashboard Platform (Fresh Start)",
+                "feature_dir": "platform"
+            },
+            "tasks": [
+                {
+                    "id": "MONO-001",
+                    "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                    "feature_id": "F001",
+                    "description": "Create monorepo root with Turborepo and tsup",
+                    "type": "setup",
+                    "priority": "critical",
+                    "files": ["package.json", "turbo.json", "tsconfig.base.json", ".gitignore"],
+                    "acceptance_criteria": ["npm install works", "turbo --version works", "tsup available as dev dependency", "turbo.json has build/dev/typecheck/lint pipelines"]
+                },
+                {
+                    "id": "MONO-002",
+                    "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                    "feature_id": "F001",
+                    "description": "Configure ESLint with boundary enforcement rules",
+                    "type": "setup",
+                    "priority": "high",
+                    "files": ["eslint.config.js", "package.json"],
+                    "acceptance_criteria": ["ESLint runs via turbo lint", "Widgets importing @platform/core fails lint", "Core importing @platform/widgets fails lint"]
+                },
+                {
+                    "id": "SDK-001",
+                    "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                    "feature_id": "F002",
+                    "description": "Create packages/sdk with expanded types",
+                    "type": "implementation",
+                    "priority": "critical",
+                    "files": ["packages/sdk/package.json", "packages/sdk/src/types.ts", "packages/sdk/src/permissions.ts", "packages/sdk/src/events.ts", "packages/sdk/src/storage.ts", "packages/sdk/src/index.ts"],
+                    "acceptance_criteria": ["WidgetManifest type exported", "WidgetContext type exported", "WidgetPermissions type exported", "WidgetEvents type exported", "WidgetStorage interface exported"]
+                },
+                {
+                    "id": "SDK-002",
+                    "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                    "feature_id": "F002",
+                    "description": "Implement widget hooks (useWidget, useWidgetStorage, useWidgetEvents)",
+                    "type": "implementation",
+                    "priority": "high",
+                    "files": ["packages/sdk/src/useWidget.tsx", "packages/sdk/src/useWidgetStorage.tsx", "packages/sdk/src/useWidgetEvents.tsx"],
+                    "acceptance_criteria": ["useWidget returns context and theme", "useWidgetStorage provides get/set/remove", "useWidgetEvents provides lifecycle callbacks"],
+                    "note": "Files use .tsx extension because they contain JSX"
+                },
+                {
+                    "id": "UI-001",
+                    "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                    "feature_id": "F004",
+                    "description": "Create packages/ui with Tailwind",
+                    "type": "implementation",
+                    "priority": "critical",
+                    "files": ["packages/ui/package.json", "packages/ui/src/styles/globals.css", "packages/ui/src/lib/utils.ts"],
+                    "acceptance_criteria": ["Tailwind CSS variables defined", "cn() utility works"]
+                },
+                {
+                    "id": "CORE-001",
+                    "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                    "feature_id": "F003",
+                    "description": "Create packages/core with PlatformProvider",
+                    "type": "implementation",
+                    "priority": "critical",
+                    "files": ["packages/core/package.json", "packages/core/src/platform/PlatformProvider.tsx", "packages/core/src/platform/capabilities.ts"],
+                    "acceptance_criteria": ["PlatformProvider exports", "capabilities detection works"]
+                },
+                {
+                    "id": "CORE-002",
+                    "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                    "feature_id": "F003",
+                    "description": "Implement WidgetRegistry",
+                    "type": "implementation",
+                    "priority": "critical",
+                    "files": ["packages/core/src/dashboard/WidgetRegistry.ts"],
+                    "acceptance_criteria": ["register() works", "get() works", "getAll() works"]
+                },
+                {
+                    "id": "CORE-003",
+                    "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                    "feature_id": "F003",
+                    "description": "Implement LayoutEngine",
+                    "type": "implementation",
+                    "priority": "high",
+                    "files": ["packages/core/src/dashboard/LayoutEngine.tsx", "packages/core/src/dashboard/Dashboard.tsx"],
+                    "acceptance_criteria": ["Renders widgets from layout config", "Passes config to widgets"]
+                },
+                {
+                    "id": "CONFIG-001",
+                    "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                    "feature_id": "F007",
+                    "description": "Create packages/config with schema",
+                    "type": "implementation",
+                    "priority": "high",
+                    "files": ["packages/config/package.json", "packages/config/src/schema.ts", "packages/config/src/layouts/dashboard.json"],
+                    "acceptance_criteria": ["Layout schema defined", "dashboard.json valid"]
+                },
+                {
+                    "id": "WIDGET-001",
+                    "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                    "feature_id": "F005",
+                    "description": "Create Coming Soon Card widget",
+                    "type": "implementation",
+                    "priority": "high",
+                    "files": ["packages/widgets/src/coming-soon-card/Widget.tsx", "packages/widgets/src/coming-soon-card/manifest.ts"],
+                    "acceptance_criteria": ["Imports only @platform/sdk", "Has manifest", "Renders correctly"]
+                },
+                {
+                    "id": "WIDGET-002",
+                    "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                    "feature_id": "F005",
+                    "description": "Create Theme Toggle widget",
+                    "type": "implementation",
+                    "priority": "high",
+                    "files": ["packages/widgets/src/theme-toggle/Widget.tsx", "packages/widgets/src/theme-toggle/manifest.ts"],
+                    "acceptance_criteria": ["Imports only @platform/sdk", "Toggles theme", "Has manifest"]
+                },
+                {
+                    "id": "WEB-001",
+                    "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                    "feature_id": "F006",
+                    "description": "Create apps/web Next.js application",
+                    "type": "implementation",
+                    "priority": "critical",
+                    "files": ["apps/web/package.json", "apps/web/next.config.ts", "apps/web/app/layout.tsx"],
+                    "acceptance_criteria": ["turbo dev --filter=web runs", "PlatformProvider wraps app"]
+                },
+                {
+                    "id": "WEB-002",
+                    "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                    "feature_id": "F006",
+                    "description": "Create settings page (dashboard is at root)",
+                    "type": "implementation",
+                    "priority": "high",
+                    "files": ["apps/web/app/settings/page.tsx"],
+                    "acceptance_criteria": ["Root page uses LayoutEngine", "Settings shows ThemeToggle"]
+                },
+                {
+                    "id": "DESKTOP-001",
+                    "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                    "feature_id": "F008",
+                    "description": "Create apps/desktop Electron shell with dev/prod loading",
+                    "type": "implementation",
+                    "priority": "high",
+                    "files": ["apps/desktop/package.json", "apps/desktop/src/main.ts", "apps/desktop/src/preload.ts"],
+                    "acceptance_criteria": ["Dev: loads localhost:3000 when !app.isPackaged", "Prod: loads file:// from process.resourcesPath", "contextBridge configured", "app.isPackaged detection works (NOT NODE_ENV)"]
+                },
+                {
+                    "id": "DESKTOP-002",
+                    "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                    "feature_id": "F008",
+                    "description": "Create electron-builder.yml configuration file",
+                    "type": "setup",
+                    "priority": "medium",
+                    "files": ["apps/desktop/electron-builder.yml"],
+                    "acceptance_criteria": ["electron-builder.yml exists with Windows/Mac/Linux targets", "appId and productName configured"]
+                },
+                {
+                    "id": "PWA-001",
+                    "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                    "feature_id": "F009",
+                    "description": "Configure next-pwa in apps/web",
+                    "type": "implementation",
+                    "priority": "high",
+                    "files": ["apps/web/next.config.ts", "apps/web/package.json"],
+                    "acceptance_criteria": ["next-pwa package installed", "Service worker generates on build", "Caching strategy configured"]
+                },
+                {
+                    "id": "PWA-002",
+                    "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                    "feature_id": "F009",
+                    "description": "Create web app manifest and icons",
+                    "type": "implementation",
+                    "priority": "high",
+                    "files": ["apps/web/public/manifest.json", "apps/web/public/icons/icon-192x192.png", "apps/web/public/icons/icon-512x512.png", "apps/web/app/layout.tsx"],
+                    "acceptance_criteria": ["manifest.json with app name, icons, theme_color", "Icons in 192x192 and 512x512 sizes", "Manifest linked in layout head"]
+                },
+                                {
+                    "id": "WEB-003",
+                    "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                    "feature_id": "F006",
+                    "description": "Compose widget registry in app (apps own widget composition)",
+                    "type": "implementation",
+                    "priority": "high",
+                    "files": ["apps/web/lib/registry.ts", "apps/web/app/layout.tsx"],
+                    "acceptance_criteria": ["App imports widgets from @platform/widgets", "Creates WidgetRegistry instance", "Passes registry to PlatformProvider", "Widgets retrievable by ID"]
+                },
+                {
+                    "id": "BUILD-001",
+                    "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                    "feature_id": "F001",
+                    "description": "Install all monorepo dependencies (npm install)",
+                    "type": "build",
+                    "priority": "critical",
+                    "commands": ["npm install"],
+                    "acceptance_criteria": ["npm install completes without errors", "node_modules created in root and all workspaces"]
+                },
+                {
+                    "id": "BUILD-002",
+                    "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                    "feature_id": "F001",
+                    "description": "Build all packages with Turborepo (turbo build)",
+                    "type": "build",
+                    "priority": "critical",
+                    "commands": ["npm run build"],
+                    "acceptance_criteria": ["turbo build completes", "All packages have dist/ folders", "No TypeScript errors"]
+                },
+                {
+                    "id": "BUILD-003",
+                    "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                    "feature_id": "F006",
+                    "description": "Build web app static export for Electron",
+                    "type": "build",
+                    "priority": "critical",
+                    "commands": ["npm run build:web"],
+                    "acceptance_criteria": ["apps/web/out/ directory created", "Static HTML/JS/CSS files generated"]
+                },
+                {
+                    "id": "BUILD-004",
+                    "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
+                    "feature_id": "F008",
+                    "description": "Package Electron app into Windows .exe installer",
+                    "type": "build",
+                    "priority": "critical",
+                    "commands": ["cd apps/desktop && npm run build && npm run package"],
+                    "acceptance_criteria": [".exe file exists in apps/desktop/dist/", "Installer size > 50MB", "File named Business Dashboard-1.0.0-Setup.exe"]
+                }
+            ]
+        },
+        "6_implementation_phases": {
+            "phases": [
+                {
+                    "phase": 1,
+                    "name": "Monorepo Foundation",
+                    "description": "Setup Turborepo workspace with base configuration.",
+                    "tasks": ["MONO-001", "MONO-002"],
+                    "deliverables": [
+                        "Root package.json with workspaces",
+                        "turbo.json pipeline config",
+                        "Shared tsconfig.base.json",
+                        "ESLint with boundary enforcement"
+                    ]
+                },
+                {
+                    "phase": 2,
+                    "name": "SDK Package",
+                    "description": "Widget API contract - built first as foundation.",
+                    "tasks": ["SDK-001", "SDK-002"],
+                    "deliverables": [
+                        "WidgetManifest, WidgetContext, WidgetPermissions types",
+                        "WidgetEvents and WidgetStorage interfaces",
+                        "useWidget, useWidgetStorage, useWidgetEvents hooks",
+                        "@platform/sdk package"
+                    ]
+                },
+                {
+                    "phase": 3,
+                    "name": "UI Package",
+                    "description": "Design system with Tailwind.",
+                    "tasks": ["UI-001"],
+                    "deliverables": [
+                        "Tailwind CSS configuration",
+                        "Theme CSS variables",
+                        "cn() utility"
+                    ]
+                },
+                {
+                    "phase": 4,
+                    "name": "Core Package",
+                    "description": "Platform runtime with registry and layout engine.",
+                    "tasks": ["CORE-001", "CORE-002", "CORE-003"],
+                    "deliverables": [
+                        "PlatformProvider context",
+                        "WidgetRegistry",
+                        "LayoutEngine"
+                    ]
+                },
+                {
+                    "phase": 5,
+                    "name": "Config Package",
+                    "description": "Layout and tenant configuration system.",
+                    "tasks": ["CONFIG-001"],
+                    "deliverables": [
+                        "Layout schema",
+                        "dashboard.json",
+                        "Config types"
+                    ]
+                },
+                {
+                    "phase": 6,
+                    "name": "Widgets Package",
+                    "description": "Widget implementations using SDK only.",
+                    "tasks": ["WIDGET-001", "WIDGET-002"],
+                    "deliverables": [
+                        "Coming Soon Card widget",
+                        "Theme Toggle widget",
+                        "Widget manifests"
+                    ]
+                },
+                {
+                    "phase": 7,
+                    "name": "Web Application",
+                    "description": "Next.js app that consumes everything.",
+                    "tasks": ["WEB-001", "WEB-002", "WEB-003"],
+                    "deliverables": [
+                        "Working web app",
+                        "Dashboard with widgets (at root /)",
+                        "Settings with theme toggle"
+                    ]
+                },
+                {
+                    "phase": 8,
+                    "name": "Desktop Application",
+                    "description": "Electron shell with secure IPC.",
+                    "tasks": ["DESKTOP-001", "DESKTOP-002"],
+                    "deliverables": [
+                        "Electron main process",
+                        "Preload with contextBridge",
+                        "Packaged .exe installer"
+                    ]
+                },
+                {
+                    "phase": 9,
+                    "name": "PWA Configuration",
+                    "description": "Make web app installable as Progressive Web App.",
+                    "tasks": ["PWA-001", "PWA-002"],
+                    "deliverables": [
+                        "next-pwa configured in Next.js",
+                        "Web app manifest (manifest.json)",
+                        "Service worker for caching",
+                        "App icons (192x192, 512x512)",
+                        "Installable on mobile and desktop browsers"
+                    ]
+                },
+                {
+                    "phase": 10,
+                    "name": "Build & Package",
+                    "description": "Install dependencies, build all packages, and create distributable artifacts.",
+                    "tasks": ["BUILD-001", "BUILD-002", "BUILD-003", "BUILD-004"],
+                    "deliverables": [
+                        "All dependencies installed (node_modules)",
+                        "All packages built (dist/ folders)",
+                        "Web app static export (apps/web/out/)",
+                        "Windows installer (apps/desktop/dist/Business Dashboard-1.0.0-Setup.exe)"
+                    ]
+                }
+            ]
+        },
+        "7_testing_strategy": {
+            "approach": "Manual Verification + Turborepo Pipeline",
+            "per_phase_verification": {
+                "phase_1": ["npm install succeeds", "turbo build runs (no packages yet)", "turbo lint runs", "ESLint boundary rules active"],
+                "phase_2": ["packages/sdk builds", "Types export correctly"],
+                "phase_3": ["packages/ui builds", "CSS compiles"],
+                "phase_4": ["packages/core builds", "No circular dependencies"],
+                "phase_5": ["packages/config builds", "JSON validates against schema"],
+                "phase_6": ["packages/widgets builds", "Only imports @platform/sdk"],
+                "phase_7": ["turbo dev --filter=web runs", "Dashboard renders widgets", "Theme toggle works", "Widgets registered in app-level registry"],
+                "phase_8": ["Electron opens", ".exe packages successfully"],
+                "phase_9": ["PWA installs on Chrome/Edge", "Service worker registers", "manifest.json loads", "App icons display"],
+                "phase_10": ["npm install completes", "turbo build succeeds", "apps/web/out/ exists", ".exe file exists in apps/desktop/dist/"]
+            },
+            "architectural_verification": [
+                "turbo lint passes (ESLint enforces boundaries)",
+                "Widgets only import @platform/sdk (enforced by ESLint)",
+                "No electron imports in packages/ or apps/web (enforced by ESLint)",
+                "All widgets have manifest.ts"
+            ]
+        },
+        "8_success_criteria": {
+            "functional": [
+                {
+                    "criterion": "Monorepo builds successfully",
+                    "verification": "turbo build completes without errors",
+                    "metric": "Exit code 0"
+                },
+                {
+                    "criterion": "Widgets import only SDK",
+                    "verification": "No @platform/core imports in packages/widgets",
+                    "metric": "grep returns empty"
+                },
+                {
+                    "criterion": "LayoutEngine renders from config",
+                    "verification": "Dashboard loads widgets defined in dashboard.json",
+                    "metric": "Widgets visible"
+                },
+                {
+                    "criterion": "Web app runs",
+                    "verification": "turbo dev --filter=web serves on localhost:3000",
+                    "metric": "Page loads"
+                },
+                {
+                    "criterion": "Desktop app packages",
+                    "verification": "electron-builder creates installer",
+                    "metric": ".exe file exists in dist/"
+                },
+                {
+                    "criterion": "PWA installs successfully",
+                    "verification": "Chrome/Edge shows install prompt, app installs",
+                    "metric": "App appears in OS app list"
+                },
+                {
+                    "criterion": "Theme toggle works",
+                    "verification": "Click toggle cycles light/dark/system",
+                    "metric": "Theme changes visually"
+                }
+            ]
+        },
+        "9_architectural_rules": {
+            "never_break": [
+                "Widgets import ONLY @platform/sdk",
+                "Core never imports widgets directly (registry layer only)",
+                "Electron never imported in React code",
+                "No tenant logic inside widgets",
+                "Config drives everything"
+            ],
+            "dependency_direction": "sdk ← core ← widgets (registered) ← apps",
+            "package_responsibilities": {
+                "sdk": "Types and hooks ONLY - no implementations",
+                "core": "Platform runtime - providers, registry, layout engine",
+                "widgets": "UI components - import sdk, export Widget + manifest",
+                "ui": "Design primitives - Tailwind, cn(), base components",
+                "config": "JSON schemas and loaders - no runtime logic",
+                "apps/web": "Routes and pages - consumes core",
+                "apps/desktop": "Electron shell - loads web output"
+            }
+        }
+    }
+}
