@@ -2,11 +2,11 @@
     "META_DOCUMENTATION": {
         "feature_name": "business-dashboard-platform",
         "schema_version": "1.0.0",
-        "version": "5.0.0",
+        "version": "5.1.0",
         "status": "approved",
         "generated_by": "Lloyd (AI Coordinator)",
         "generated_at": "2025-12-13",
-        "updated_at": "2025-12-13",
+        "updated_at": "2025-12-14",
         "approach": "FRESH_START",
         "workorder_id": "WO-BUSINESS-DASHBOARD-PLATFORM-002",
         "reference_mvp": "<OPTIONAL_REFERENCE>",
@@ -20,6 +20,11 @@
                 "version": "5.0.0",
                 "date": "2025-12-13",
                 "notes": "Updated with build lessons learned: corrected versions (Next.js 15, Electron 33), fixed Electron loading strategy (process.resourcesPath, !app.isPackaged), added build_gotchas section, fixed file extensions (.tsx for JSX), npm workspace protocol fix"
+            },
+            {
+                "version": "5.1.0",
+                "date": "2025-12-14",
+                "notes": "Widget placement clarification: Theme Toggle widget only on settings route (icon in header + full in Appearance section), dashboard.json contains only Coming Soon Card widget instances"
             }
         ]
     },
@@ -615,7 +620,7 @@
                     "type": "implementation",
                     "priority": "high",
                     "files": ["apps/web/app/settings/page.tsx"],
-                    "acceptance_criteria": ["Root page uses LayoutEngine", "Settings shows ThemeToggle"]
+                    "acceptance_criteria": ["Root page uses LayoutEngine with Coming Soon Cards only", "Settings has icon-only ThemeToggle in header", "Settings has full ThemeToggle in Appearance section"]
                 },
                 {
                     "id": "DESKTOP-001",
@@ -786,8 +791,8 @@
                     "tasks": ["WEB-001", "WEB-002", "WEB-003"],
                     "deliverables": [
                         "Working web app",
-                        "Dashboard with widgets (at root /)",
-                        "Settings with theme toggle"
+                        "Dashboard (at root /) with Coming Soon Card widgets only",
+                        "Settings page with icon-only theme toggle in header + full theme toggle in Appearance section"
                     ]
                 },
                 {
@@ -837,7 +842,7 @@
                 "phase_4": ["packages/core builds", "No circular dependencies"],
                 "phase_5": ["packages/config builds", "JSON validates against schema"],
                 "phase_6": ["packages/widgets builds", "Only imports @platform/sdk"],
-                "phase_7": ["turbo dev --filter=web runs", "Dashboard renders widgets", "Theme toggle works", "Widgets registered in app-level registry"],
+                "phase_7": ["turbo dev --filter=web runs", "Dashboard renders Coming Soon Cards (no theme toggle on dashboard)", "Theme toggle works on settings page (icon in header, full in Appearance)", "Widgets registered in app-level registry"],
                 "phase_8": ["Electron opens", ".exe packages successfully"],
                 "phase_9": ["PWA installs on Chrome/Edge", "Service worker registers", "manifest.json loads", "App icons display"],
                 "phase_10": ["npm install completes", "turbo build succeeds", "apps/web/out/ exists", ".exe file exists in apps/desktop/dist/"]
@@ -882,9 +887,9 @@
                     "metric": "App appears in OS app list"
                 },
                 {
-                    "criterion": "Theme toggle works",
-                    "verification": "Click toggle cycles light/dark/system",
-                    "metric": "Theme changes visually"
+                    "criterion": "Theme toggle works on settings page only",
+                    "verification": "Click toggle cycles light/dark/system on settings page (not on dashboard)",
+                    "metric": "Theme changes visually, settings has icon in header + full toggle in Appearance"
                 }
             ]
         },

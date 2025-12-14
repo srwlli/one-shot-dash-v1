@@ -20,6 +20,14 @@ export default function SettingsPage() {
           </Link>
           <h1 className="text-2xl font-bold text-foreground">Settings</h1>
         </div>
+        <WidgetProvider
+          manifest={themeToggleManifest}
+          config={{ showLabels: false, compact: true }}
+          theme={theme}
+          capabilities={capabilities}
+        >
+          <ThemeToggle />
+        </WidgetProvider>
       </header>
 
       <div className="max-w-2xl space-y-8">

@@ -37,13 +37,6 @@
         "description": "Manage your schedule and upcoming events.",
         "icon": "calendar"
       }
-    },
-    {
-      "widgetId": "theme-toggle",
-      "instanceId": "theme-toggle-1",
-      "column": 1,
-      "colSpan": 2,
-      "config": {}
     }
   ]
 }
