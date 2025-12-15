@@ -1,0 +1,256 @@
+{
+  "META_DOCUMENTATION": {
+    "feature_name": "widget-integrations",
+    "schema_version": "1.0.0",
+    "version": "1.0.0",
+    "status": "complete",
+    "generated_by": "Claude Code",
+    "has_context": false,
+    "has_analysis": false,
+    "created_at": "2025-12-14"
+  },
+  "UNIVERSAL_PLANNING_STRUCTURE": {
+    "0_preparation": {
+      "foundation_docs": [
+        "packages/sdk/src/types.ts",
+        "packages/sdk/src/useWidget.tsx",
+        "packages/sdk/src/useWidgetStorage.tsx",
+        "packages/core/src/dashboard/WidgetRegistry.ts",
+        "packages/core/src/platform/PlatformProvider.tsx"
+      ],
+      "reference_patterns": [
+        "useWidgetStorage hook pattern for data hooks",
+        "WidgetProvider context pattern for data context",
+        "IPC handler pattern in desktop/src/ipc.ts"
+      ]
+    },
+    "1_executive_summary": {
+      "description": "Extend the Business Dashboard widget system to support multiple data sources: REST APIs, Real-time WebSockets, and File System (Electron). This enables widgets to connect to external services, receive live updates, and access local files.",
+      "goal": "Create a unified data provider system with hooks for REST, WebSocket, and File System access that integrates seamlessly with the existing widget architecture.",
+      "scope": "SDK package (new data hooks), Desktop app (IPC handlers), Core package (integration)",
+      "estimated_complexity": "medium"
+    },
+    "2_risk_assessment": {
+      "overall_risk": "medium",
+      "risks": [
+        {
+          "risk": "WebSocket connection management complexity",
+          "severity": "medium",
+          "mitigation": "Use proven reconnection patterns with exponential backoff"
+        },
+        {
+          "risk": "File system security in Electron",
+          "severity": "high",
+          "mitigation": "Restrict file access to specific directories, validate paths"
+        },
+        {
+          "risk": "Memory leaks from uncleaned subscriptions",
+          "severity": "medium",
+          "mitigation": "Proper cleanup in useEffect return functions"
+        }
+      ]
+    },
+    "3_current_state_analysis": {
+      "existing_architecture": "Widget system with WidgetProvider, useWidget hook, and useWidgetStorage for local persistence",
+      "files_to_create": [
+        {"path": "packages/sdk/src/data/types.ts", "purpose": "Data source types and interfaces"},
+        {"path": "packages/sdk/src/data/useRestApi.ts", "purpose": "REST API data fetching hook"},
+        {"path": "packages/sdk/src/data/useWebSocket.ts", "purpose": "WebSocket real-time data hook"},
+        {"path": "packages/sdk/src/data/useFileSystem.ts", "purpose": "File system access hook"},
+        {"path": "packages/sdk/src/data/index.ts", "purpose": "Data module exports"}
+      ],
+      "files_to_modify": [
+        {"path": "packages/sdk/src/types.ts", "purpose": "Add DataSourceConfig to WidgetManifest"},
+        {"path": "packages/sdk/src/index.ts", "purpose": "Export new data hooks"},
+        {"path": "apps/desktop/src/ipc.ts", "purpose": "Add file system IPC handlers"},
+        {"path": "apps/desktop/src/preload.ts", "purpose": "Expose file system API to renderer"}
+      ]
+    },
+    "4_key_features": {
+      "features": [
+        {
+          "id": "F1",
+          "name": "REST API Hook",
+          "description": "useRestApi hook for fetching data from REST endpoints with caching, refresh, and error handling"
+        },
+        {
+          "id": "F2",
+          "name": "WebSocket Hook",
+          "description": "useWebSocket hook for real-time data streams with auto-reconnect and message handling"
+        },
+        {
+          "id": "F3",
+          "name": "File System Hook",
+          "description": "useFileSystem hook for reading/writing local files (Electron only)"
+        },
+        {
+          "id": "F4",
+          "name": "Data Source Types",
+          "description": "TypeScript interfaces for data sources, configs, and status tracking"
+        }
+      ]
+    },
+    "5_task_id_system": {
+      "workorder": {
+        "id": "WO-WIDGET-INTEGRATIONS-001",
+        "name": "Widget Data Integrations",
+        "feature_dir": "coderef/working/widget-integrations"
+      },
+      "tasks": [
+        {
+          "id": "DATA-001",
+          "workorder_id": "WO-WIDGET-INTEGRATIONS-001",
+          "description": "Create data source types and interfaces",
+          "file": "packages/sdk/src/data/types.ts",
+          "feature_id": "F4",
+          "priority": "high",
+          "dependencies": []
+        },
+        {
+          "id": "DATA-002",
+          "workorder_id": "WO-WIDGET-INTEGRATIONS-001",
+          "description": "Implement useRestApi hook",
+          "file": "packages/sdk/src/data/useRestApi.ts",
+          "feature_id": "F1",
+          "priority": "high",
+          "dependencies": ["DATA-001"]
+        },
+        {
+          "id": "DATA-003",
+          "workorder_id": "WO-WIDGET-INTEGRATIONS-001",
+          "description": "Implement useWebSocket hook",
+          "file": "packages/sdk/src/data/useWebSocket.ts",
+          "feature_id": "F2",
+          "priority": "high",
+          "dependencies": ["DATA-001"]
+        },
+        {
+          "id": "DATA-004",
+          "workorder_id": "WO-WIDGET-INTEGRATIONS-001",
+          "description": "Add file system IPC handlers to Electron",
+          "file": "apps/desktop/src/ipc.ts",
+          "feature_id": "F3",
+          "priority": "medium",
+          "dependencies": []
+        },
+        {
+          "id": "DATA-005",
+          "workorder_id": "WO-WIDGET-INTEGRATIONS-001",
+          "description": "Expose file system API in preload",
+          "file": "apps/desktop/src/preload.ts",
+          "feature_id": "F3",
+          "priority": "medium",
+          "dependencies": ["DATA-004"]
+        },
+        {
+          "id": "DATA-006",
+          "workorder_id": "WO-WIDGET-INTEGRATIONS-001",
+          "description": "Implement useFileSystem hook",
+          "file": "packages/sdk/src/data/useFileSystem.ts",
+          "feature_id": "F3",
+          "priority": "medium",
+          "dependencies": ["DATA-001", "DATA-005"]
+        },
+        {
+          "id": "DATA-007",
+          "workorder_id": "WO-WIDGET-INTEGRATIONS-001",
+          "description": "Create data module barrel export",
+          "file": "packages/sdk/src/data/index.ts",
+          "feature_id": "F4",
+          "priority": "low",
+          "dependencies": ["DATA-002", "DATA-003", "DATA-006"]
+        },
+        {
+          "id": "DATA-008",
+          "workorder_id": "WO-WIDGET-INTEGRATIONS-001",
+          "description": "Export data hooks from SDK index",
+          "file": "packages/sdk/src/index.ts",
+          "feature_id": "F4",
+          "priority": "low",
+          "dependencies": ["DATA-007"]
+        },
+        {
+          "id": "DATA-009",
+          "workorder_id": "WO-WIDGET-INTEGRATIONS-001",
+          "description": "Add DataSourceConfig to WidgetManifest type",
+          "file": "packages/sdk/src/types.ts",
+          "feature_id": "F4",
+          "priority": "low",
+          "dependencies": ["DATA-001"]
+        }
+      ]
+    },
+    "6_implementation_phases": {
+      "phases": [
+        {
+          "phase": 1,
+          "name": "Foundation",
+          "description": "Create data source types and interfaces",
+          "tasks": ["DATA-001"],
+          "deliverables": ["packages/sdk/src/data/types.ts"]
+        },
+        {
+          "phase": 2,
+          "name": "Core Hooks",
+          "description": "Implement REST and WebSocket hooks",
+          "tasks": ["DATA-002", "DATA-003"],
+          "deliverables": ["packages/sdk/src/data/useRestApi.ts", "packages/sdk/src/data/useWebSocket.ts"]
+        },
+        {
+          "phase": 3,
+          "name": "Electron Integration",
+          "description": "Add file system support for desktop",
+          "tasks": ["DATA-004", "DATA-005", "DATA-006"],
+          "deliverables": ["apps/desktop/src/ipc.ts", "apps/desktop/src/preload.ts", "packages/sdk/src/data/useFileSystem.ts"]
+        },
+        {
+          "phase": 4,
+          "name": "Integration",
+          "description": "Export hooks and extend types",
+          "tasks": ["DATA-007", "DATA-008", "DATA-009"],
+          "deliverables": ["packages/sdk/src/data/index.ts", "packages/sdk/src/index.ts", "packages/sdk/src/types.ts"]
+        }
+      ]
+    },
+    "7_testing_strategy": {
+      "unit_tests": [
+        "useRestApi: fetch success, error handling, refresh, abort on unmount",
+        "useWebSocket: connect, reconnect, message parsing, disconnect",
+        "useFileSystem: read, write, watch, permission denied"
+      ],
+      "integration_tests": [
+        "Widget using useRestApi renders data correctly",
+        "Widget using useWebSocket updates on message",
+        "Electron widget can read/write files"
+      ]
+    },
+    "8_success_criteria": {
+      "criteria": [
+        "Widgets can fetch data from REST APIs with auto-refresh",
+        "Widgets can subscribe to WebSocket streams with auto-reconnect",
+        "Electron widgets can read/write local files",
+        "All hooks properly cleanup on unmount",
+        "TypeScript types provide full intellisense"
+      ]
+    },
+    "9_implementation_checklist": {
+      "phase_1": [
+        "[ ] Create packages/sdk/src/data/types.ts with DataSource, DataSourceConfig interfaces"
+      ],
+      "phase_2": [
+        "[ ] Implement useRestApi with fetch, caching, refresh interval",
+        "[ ] Implement useWebSocket with connect, reconnect, send, disconnect"
+      ],
+      "phase_3": [
+        "[ ] Add fs:read, fs:write, fs:watch IPC handlers",
+        "[ ] Expose fileSystem API in preload.ts",
+        "[ ] Implement useFileSystem hook with platform detection"
+      ],
+      "phase_4": [
+        "[ ] Create data/index.ts barrel export",
+        "[ ] Add exports to sdk/index.ts",
+        "[ ] Extend WidgetManifest with dataSources field"
+      ]
+    }
+  }
+}

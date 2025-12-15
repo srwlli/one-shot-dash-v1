@@ -1,0 +1,157 @@
+{
+  "META_DOCUMENTATION": {
+    "feature_name": "simplify-base",
+    "schema_version": "1.0.0",
+    "version": "1.0.0",
+    "status": "complete",
+    "generated_by": "Claude Code",
+    "has_context": false,
+    "has_analysis": false,
+    "created_at": "2025-12-14"
+  },
+  "UNIVERSAL_PLANNING_STRUCTURE": {
+    "0_preparation": {
+      "foundation_docs": [
+        "apps/web/app/page.tsx",
+        "apps/web/app/settings/page.tsx",
+        "packages/config/src/index.ts"
+      ],
+      "reference_patterns": [
+        "Theme toggle using WidgetProvider pattern",
+        "Dashboard component with actions prop"
+      ]
+    },
+    "1_executive_summary": {
+      "description": "Simplify the platform to its simplest form: one home page with a theme toggle icon in the header. Remove the settings page entirely.",
+      "goal": "Create minimal, clean base with single page and theme toggle for building upon.",
+      "scope": "apps/web (remove settings), packages/config (remove settings layout)",
+      "estimated_complexity": "low"
+    },
+    "2_risk_assessment": {
+      "overall_risk": "low",
+      "risks": [
+        {
+          "risk": "Theme toggle CSS may not update properly",
+          "severity": "low",
+          "mitigation": "Use same WidgetProvider pattern that worked on settings page"
+        }
+      ]
+    },
+    "3_current_state_analysis": {
+      "existing_architecture": "2 pages: Home with Settings link, Settings with theme toggle",
+      "files_to_create": [],
+      "files_to_modify": [
+        {"path": "apps/web/app/page.tsx", "purpose": "Add theme toggle, remove Settings link"},
+        {"path": "packages/config/src/index.ts", "purpose": "Remove settings layout export"}
+      ],
+      "files_to_delete": [
+        {"path": "apps/web/app/settings/page.tsx", "purpose": "Remove settings page"},
+        {"path": "packages/config/src/layouts/settings.json", "purpose": "Remove settings layout"}
+      ]
+    },
+    "4_key_features": {
+      "features": [
+        {
+          "id": "F1",
+          "name": "Theme Toggle on Home",
+          "description": "Move theme toggle icon to home page header (top right)"
+        },
+        {
+          "id": "F2",
+          "name": "Remove Settings",
+          "description": "Delete settings page and layout configuration"
+        }
+      ]
+    },
+    "5_task_id_system": {
+      "workorder": {
+        "id": "WO-SIMPLIFY-BASE-001",
+        "name": "Simplify Base",
+        "feature_dir": "coderef/working/simplify-base"
+      },
+      "tasks": [
+        {
+          "id": "SIMPLIFY-001",
+          "workorder_id": "WO-SIMPLIFY-BASE-001",
+          "description": "Update home page with theme toggle",
+          "file": "apps/web/app/page.tsx",
+          "feature_id": "F1",
+          "priority": "high",
+          "dependencies": []
+        },
+        {
+          "id": "SIMPLIFY-002",
+          "workorder_id": "WO-SIMPLIFY-BASE-001",
+          "description": "Delete settings page",
+          "file": "apps/web/app/settings/page.tsx",
+          "feature_id": "F2",
+          "priority": "high",
+          "dependencies": ["SIMPLIFY-001"]
+        },
+        {
+          "id": "SIMPLIFY-003",
+          "workorder_id": "WO-SIMPLIFY-BASE-001",
+          "description": "Delete settings layout",
+          "file": "packages/config/src/layouts/settings.json",
+          "feature_id": "F2",
+          "priority": "high",
+          "dependencies": ["SIMPLIFY-002"]
+        },
+        {
+          "id": "SIMPLIFY-004",
+          "workorder_id": "WO-SIMPLIFY-BASE-001",
+          "description": "Remove settings layout export from config",
+          "file": "packages/config/src/index.ts",
+          "feature_id": "F2",
+          "priority": "high",
+          "dependencies": ["SIMPLIFY-003"]
+        }
+      ]
+    },
+    "6_implementation_phases": {
+      "phases": [
+        {
+          "phase": 1,
+          "name": "Update Home",
+          "description": "Add theme toggle to home page, remove Settings link",
+          "tasks": ["SIMPLIFY-001"],
+          "deliverables": ["apps/web/app/page.tsx"]
+        },
+        {
+          "phase": 2,
+          "name": "Remove Settings",
+          "description": "Delete settings page and layout, update config exports",
+          "tasks": ["SIMPLIFY-002", "SIMPLIFY-003", "SIMPLIFY-004"],
+          "deliverables": []
+        }
+      ]
+    },
+    "7_testing_strategy": {
+      "unit_tests": [],
+      "integration_tests": [
+        "Theme toggle changes theme on home page",
+        "Page renders correctly with single layout"
+      ]
+    },
+    "8_success_criteria": {
+      "criteria": [
+        "Home page has theme toggle icon in top right",
+        "Theme toggle works (light/dark mode)",
+        "No settings page exists",
+        "Build succeeds without errors"
+      ]
+    },
+    "9_implementation_checklist": {
+      "phase_1": [
+        "[ ] Add ThemeToggleButton component to page.tsx",
+        "[ ] Update Dashboard actions to use theme toggle",
+        "[ ] Remove Settings link"
+      ],
+      "phase_2": [
+        "[ ] Delete apps/web/app/settings/page.tsx",
+        "[ ] Delete packages/config/src/layouts/settings.json",
+        "[ ] Remove settings layout from packages/config/src/index.ts"
+      ]
+    }
+  }
+}

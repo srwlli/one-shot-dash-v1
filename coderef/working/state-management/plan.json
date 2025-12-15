@@ -1,0 +1,250 @@
+{
+  "META_DOCUMENTATION": {
+    "feature_name": "state-management",
+    "schema_version": "1.0.0",
+    "version": "1.0.0",
+    "status": "complete",
+    "generated_by": "Claude Code",
+    "has_context": false,
+    "has_analysis": false,
+    "created_at": "2025-12-14"
+  },
+  "UNIVERSAL_PLANNING_STRUCTURE": {
+    "0_preparation": {
+      "foundation_docs": [
+        "packages/core/src/index.ts",
+        "packages/core/src/platform/PlatformProvider.tsx",
+        "packages/sdk/src/useWidget.tsx"
+      ],
+      "reference_patterns": [
+        "Zustand store pattern with TypeScript",
+        "Persist middleware for localStorage",
+        "Selective subscriptions to prevent re-renders"
+      ]
+    },
+    "1_executive_summary": {
+      "description": "Add Zustand-based global state management to the @platform/core package. This provides centralized stores for app state, widget state, notifications, and cached data.",
+      "goal": "Create 4 Zustand stores (app, widget, notification, data) with TypeScript types, persistence, and devtools support.",
+      "scope": "packages/core - new store directory with appStore, widgetStore, notificationStore, dataStore",
+      "estimated_complexity": "medium"
+    },
+    "2_risk_assessment": {
+      "overall_risk": "low",
+      "risks": [
+        {
+          "risk": "State synchronization with existing context",
+          "severity": "medium",
+          "mitigation": "Gradually migrate from context to stores, keep both during transition"
+        },
+        {
+          "risk": "localStorage quota limits",
+          "severity": "low",
+          "mitigation": "Only persist essential state, implement cleanup"
+        },
+        {
+          "risk": "Unnecessary re-renders",
+          "severity": "medium",
+          "mitigation": "Use selective subscriptions and shallow equality"
+        }
+      ]
+    },
+    "3_current_state_analysis": {
+      "existing_architecture": "React Context-based state in PlatformProvider (theme, capabilities, registry)",
+      "files_to_create": [
+        {"path": "packages/core/src/store/types.ts", "purpose": "TypeScript types for all stores"},
+        {"path": "packages/core/src/store/appStore.ts", "purpose": "App-wide state (theme, sidebar, preferences)"},
+        {"path": "packages/core/src/store/widgetStore.ts", "purpose": "Widget instances and their states"},
+        {"path": "packages/core/src/store/notificationStore.ts", "purpose": "Toast queue and notifications"},
+        {"path": "packages/core/src/store/dataStore.ts", "purpose": "Cached API data and subscriptions"},
+        {"path": "packages/core/src/store/index.ts", "purpose": "Store exports and hooks"}
+      ],
+      "files_to_modify": [
+        {"path": "packages/core/package.json", "purpose": "Add zustand dependency"},
+        {"path": "packages/core/src/index.ts", "purpose": "Export store hooks"}
+      ]
+    },
+    "4_key_features": {
+      "features": [
+        {
+          "id": "F1",
+          "name": "App Store",
+          "description": "Global app state: theme, sidebar collapsed, user preferences, current tenant"
+        },
+        {
+          "id": "F2",
+          "name": "Widget Store",
+          "description": "Widget instance management: active widgets, loading states, error states, configs"
+        },
+        {
+          "id": "F3",
+          "name": "Notification Store",
+          "description": "Toast notifications: queue, history, unread count, auto-dismiss"
+        },
+        {
+          "id": "F4",
+          "name": "Data Store",
+          "description": "Data caching: API responses, WebSocket subscriptions, request states"
+        }
+      ]
+    },
+    "5_task_id_system": {
+      "workorder": {
+        "id": "WO-STATE-MANAGEMENT-001",
+        "name": "State Management",
+        "feature_dir": "coderef/working/state-management"
+      },
+      "tasks": [
+        {
+          "id": "STATE-001",
+          "workorder_id": "WO-STATE-MANAGEMENT-001",
+          "description": "Install Zustand dependency",
+          "file": "packages/core/package.json",
+          "feature_id": "F1",
+          "priority": "high",
+          "dependencies": []
+        },
+        {
+          "id": "STATE-002",
+          "workorder_id": "WO-STATE-MANAGEMENT-001",
+          "description": "Create store TypeScript types",
+          "file": "packages/core/src/store/types.ts",
+          "feature_id": "F1",
+          "priority": "high",
+          "dependencies": ["STATE-001"]
+        },
+        {
+          "id": "STATE-003",
+          "workorder_id": "WO-STATE-MANAGEMENT-001",
+          "description": "Create App Store with theme and preferences",
+          "file": "packages/core/src/store/appStore.ts",
+          "feature_id": "F1",
+          "priority": "high",
+          "dependencies": ["STATE-002"]
+        },
+        {
+          "id": "STATE-004",
+          "workorder_id": "WO-STATE-MANAGEMENT-001",
+          "description": "Create Widget Store for instance management",
+          "file": "packages/core/src/store/widgetStore.ts",
+          "feature_id": "F2",
+          "priority": "high",
+          "dependencies": ["STATE-002"]
+        },
+        {
+          "id": "STATE-005",
+          "workorder_id": "WO-STATE-MANAGEMENT-001",
+          "description": "Create Notification Store for toasts",
+          "file": "packages/core/src/store/notificationStore.ts",
+          "feature_id": "F3",
+          "priority": "medium",
+          "dependencies": ["STATE-002"]
+        },
+        {
+          "id": "STATE-006",
+          "workorder_id": "WO-STATE-MANAGEMENT-001",
+          "description": "Create Data Store for caching",
+          "file": "packages/core/src/store/dataStore.ts",
+          "feature_id": "F4",
+          "priority": "medium",
+          "dependencies": ["STATE-002"]
+        },
+        {
+          "id": "STATE-007",
+          "workorder_id": "WO-STATE-MANAGEMENT-001",
+          "description": "Create store barrel export and hooks",
+          "file": "packages/core/src/store/index.ts",
+          "feature_id": "F1",
+          "priority": "low",
+          "dependencies": ["STATE-003", "STATE-004", "STATE-005", "STATE-006"]
+        },
+        {
+          "id": "STATE-008",
+          "workorder_id": "WO-STATE-MANAGEMENT-001",
+          "description": "Export stores from core package",
+          "file": "packages/core/src/index.ts",
+          "feature_id": "F1",
+          "priority": "low",
+          "dependencies": ["STATE-007"]
+        }
+      ]
+    },
+    "6_implementation_phases": {
+      "phases": [
+        {
+          "phase": 1,
+          "name": "Setup",
+          "description": "Install Zustand and create type definitions",
+          "tasks": ["STATE-001", "STATE-002"],
+          "deliverables": ["packages/core/package.json", "packages/core/src/store/types.ts"]
+        },
+        {
+          "phase": 2,
+          "name": "Core Stores",
+          "description": "Create App and Widget stores",
+          "tasks": ["STATE-003", "STATE-004"],
+          "deliverables": ["packages/core/src/store/appStore.ts", "packages/core/src/store/widgetStore.ts"]
+        },
+        {
+          "phase": 3,
+          "name": "Support Stores",
+          "description": "Create Notification and Data stores",
+          "tasks": ["STATE-005", "STATE-006"],
+          "deliverables": ["packages/core/src/store/notificationStore.ts", "packages/core/src/store/dataStore.ts"]
+        },
+        {
+          "phase": 4,
+          "name": "Integration",
+          "description": "Export stores and integrate with existing code",
+          "tasks": ["STATE-007", "STATE-008"],
+          "deliverables": ["packages/core/src/store/index.ts", "packages/core/src/index.ts"]
+        }
+      ]
+    },
+    "7_testing_strategy": {
+      "unit_tests": [
+        "appStore: setTheme updates theme and persists",
+        "widgetStore: addWidget creates instance, removeWidget cleans up",
+        "notificationStore: addToast queues notification, dismiss removes",
+        "dataStore: setCache stores data, getCache retrieves with TTL check"
+      ],
+      "integration_tests": [
+        "Theme change propagates to all subscribed components",
+        "Widget state updates trigger re-render only in affected components",
+        "Notification auto-dismiss works correctly"
+      ]
+    },
+    "8_success_criteria": {
+      "criteria": [
+        "All 4 stores created with TypeScript types",
+        "Persist middleware saves app preferences to localStorage",
+        "Devtools middleware works in development",
+        "Selective subscriptions prevent unnecessary re-renders",
+        "Stores are accessible via exported hooks"
+      ]
+    },
+    "9_implementation_checklist": {
+      "phase_1": [
+        "[ ] Install zustand in packages/core",
+        "[ ] Create AppState, WidgetState, NotificationState, DataState types",
+        "[ ] Create store action types"
+      ],
+      "phase_2": [
+        "[ ] Create appStore with theme, sidebarCollapsed, preferences",
+        "[ ] Add persist middleware to appStore",
+        "[ ] Create widgetStore with instances, loading, errors",
+        "[ ] Add widget CRUD actions"
+      ],
+      "phase_3": [
+        "[ ] Create notificationStore with toast queue",
+        "[ ] Add toast actions: add, dismiss, dismissAll",
+        "[ ] Create dataStore with cache map",
+        "[ ] Add cache actions: set, get, invalidate"
+      ],
+      "phase_4": [
+        "[ ] Create store/index.ts with all exports",
+        "[ ] Create useAppStore, useWidgetStore, useNotificationStore, useDataStore hooks",
+        "[ ] Export from packages/core/src/index.ts"
+      ]
+    }
+  }
+}

@@ -1,0 +1,316 @@
+{
+  "META_DOCUMENTATION": {
+    "feature_name": "ui-components",
+    "schema_version": "1.0.0",
+    "version": "1.0.0",
+    "status": "complete",
+    "generated_by": "Claude Code",
+    "has_context": false,
+    "has_analysis": false,
+    "created_at": "2025-12-14"
+  },
+  "UNIVERSAL_PLANNING_STRUCTURE": {
+    "0_preparation": {
+      "foundation_docs": [
+        "packages/ui/src/index.ts",
+        "packages/ui/src/styles/globals.css",
+        "packages/ui/package.json"
+      ],
+      "reference_patterns": [
+        "shadcn/ui component patterns",
+        "Radix UI primitive usage",
+        "class-variance-authority for variants"
+      ]
+    },
+    "1_executive_summary": {
+      "description": "Add a shadcn/ui based component library to the @platform/ui package. This provides reusable, accessible, and customizable UI components for building widgets and dashboard interfaces.",
+      "goal": "Create 16 core UI components (forms, feedback, overlay, data display) using Radix UI primitives with Tailwind CSS styling.",
+      "scope": "packages/ui - new components directory with Button, Input, Select, Dialog, Toast, Card, and more",
+      "estimated_complexity": "medium"
+    },
+    "2_risk_assessment": {
+      "overall_risk": "low",
+      "risks": [
+        {
+          "risk": "Radix UI bundle size",
+          "severity": "low",
+          "mitigation": "Tree-shaking removes unused primitives"
+        },
+        {
+          "risk": "Style conflicts with existing CSS",
+          "severity": "medium",
+          "mitigation": "Use CSS variables and scoped class names"
+        },
+        {
+          "risk": "Accessibility compliance",
+          "severity": "low",
+          "mitigation": "Radix UI primitives are ARIA compliant by default"
+        }
+      ]
+    },
+    "3_current_state_analysis": {
+      "existing_architecture": "Empty @platform/ui package with only globals.css styles export",
+      "files_to_create": [
+        {"path": "packages/ui/src/lib/utils.ts", "purpose": "cn() utility for class merging"},
+        {"path": "packages/ui/src/components/button.tsx", "purpose": "Button with variants"},
+        {"path": "packages/ui/src/components/input.tsx", "purpose": "Input field component"},
+        {"path": "packages/ui/src/components/textarea.tsx", "purpose": "Textarea component"},
+        {"path": "packages/ui/src/components/label.tsx", "purpose": "Form label component"},
+        {"path": "packages/ui/src/components/select.tsx", "purpose": "Select dropdown component"},
+        {"path": "packages/ui/src/components/checkbox.tsx", "purpose": "Checkbox component"},
+        {"path": "packages/ui/src/components/switch.tsx", "purpose": "Toggle switch component"},
+        {"path": "packages/ui/src/components/alert.tsx", "purpose": "Alert message component"},
+        {"path": "packages/ui/src/components/toast.tsx", "purpose": "Toast notification system"},
+        {"path": "packages/ui/src/components/spinner.tsx", "purpose": "Loading spinner"},
+        {"path": "packages/ui/src/components/skeleton.tsx", "purpose": "Loading skeleton"},
+        {"path": "packages/ui/src/components/dialog.tsx", "purpose": "Modal dialog component"},
+        {"path": "packages/ui/src/components/dropdown.tsx", "purpose": "Dropdown menu component"},
+        {"path": "packages/ui/src/components/tooltip.tsx", "purpose": "Tooltip component"},
+        {"path": "packages/ui/src/components/card.tsx", "purpose": "Card container component"},
+        {"path": "packages/ui/src/components/badge.tsx", "purpose": "Badge/tag component"},
+        {"path": "packages/ui/src/components/index.ts", "purpose": "Component barrel export"}
+      ],
+      "files_to_modify": [
+        {"path": "packages/ui/package.json", "purpose": "Add Radix UI and utility dependencies"},
+        {"path": "packages/ui/src/index.ts", "purpose": "Export components"}
+      ]
+    },
+    "4_key_features": {
+      "features": [
+        {
+          "id": "F1",
+          "name": "Form Components",
+          "description": "Button, Input, Textarea, Select, Checkbox, Switch, Label - core form elements with variants"
+        },
+        {
+          "id": "F2",
+          "name": "Feedback Components",
+          "description": "Alert, Toast, Spinner, Skeleton - user feedback and loading states"
+        },
+        {
+          "id": "F3",
+          "name": "Overlay Components",
+          "description": "Dialog, Dropdown, Tooltip - modal and popover interactions"
+        },
+        {
+          "id": "F4",
+          "name": "Data Display Components",
+          "description": "Card, Badge - content containers and labels"
+        }
+      ]
+    },
+    "5_task_id_system": {
+      "workorder": {
+        "id": "WO-UI-COMPONENTS-001",
+        "name": "UI Component Library",
+        "feature_dir": "coderef/working/ui-components"
+      },
+      "tasks": [
+        {
+          "id": "UI-001",
+          "workorder_id": "WO-UI-COMPONENTS-001",
+          "description": "Install Radix UI and utility dependencies",
+          "file": "packages/ui/package.json",
+          "feature_id": "F1",
+          "priority": "high",
+          "dependencies": []
+        },
+        {
+          "id": "UI-002",
+          "workorder_id": "WO-UI-COMPONENTS-001",
+          "description": "Create cn() utility function for class merging",
+          "file": "packages/ui/src/lib/utils.ts",
+          "feature_id": "F1",
+          "priority": "high",
+          "dependencies": ["UI-001"]
+        },
+        {
+          "id": "UI-003",
+          "workorder_id": "WO-UI-COMPONENTS-001",
+          "description": "Create Button component with variants",
+          "file": "packages/ui/src/components/button.tsx",
+          "feature_id": "F1",
+          "priority": "high",
+          "dependencies": ["UI-002"]
+        },
+        {
+          "id": "UI-004",
+          "workorder_id": "WO-UI-COMPONENTS-001",
+          "description": "Create Input, Textarea, Label components",
+          "file": "packages/ui/src/components/input.tsx",
+          "feature_id": "F1",
+          "priority": "high",
+          "dependencies": ["UI-002"]
+        },
+        {
+          "id": "UI-005",
+          "workorder_id": "WO-UI-COMPONENTS-001",
+          "description": "Create Select component with Radix",
+          "file": "packages/ui/src/components/select.tsx",
+          "feature_id": "F1",
+          "priority": "high",
+          "dependencies": ["UI-002"]
+        },
+        {
+          "id": "UI-006",
+          "workorder_id": "WO-UI-COMPONENTS-001",
+          "description": "Create Checkbox and Switch components",
+          "file": "packages/ui/src/components/checkbox.tsx",
+          "feature_id": "F1",
+          "priority": "medium",
+          "dependencies": ["UI-002"]
+        },
+        {
+          "id": "UI-007",
+          "workorder_id": "WO-UI-COMPONENTS-001",
+          "description": "Create Alert component with variants",
+          "file": "packages/ui/src/components/alert.tsx",
+          "feature_id": "F2",
+          "priority": "medium",
+          "dependencies": ["UI-002"]
+        },
+        {
+          "id": "UI-008",
+          "workorder_id": "WO-UI-COMPONENTS-001",
+          "description": "Create Toast and Toaster components",
+          "file": "packages/ui/src/components/toast.tsx",
+          "feature_id": "F2",
+          "priority": "medium",
+          "dependencies": ["UI-002"]
+        },
+        {
+          "id": "UI-009",
+          "workorder_id": "WO-UI-COMPONENTS-001",
+          "description": "Create Spinner and Skeleton components",
+          "file": "packages/ui/src/components/spinner.tsx",
+          "feature_id": "F2",
+          "priority": "low",
+          "dependencies": ["UI-002"]
+        },
+        {
+          "id": "UI-010",
+          "workorder_id": "WO-UI-COMPONENTS-001",
+          "description": "Create Dialog modal component",
+          "file": "packages/ui/src/components/dialog.tsx",
+          "feature_id": "F3",
+          "priority": "high",
+          "dependencies": ["UI-002"]
+        },
+        {
+          "id": "UI-011",
+          "workorder_id": "WO-UI-COMPONENTS-001",
+          "description": "Create Dropdown and Tooltip components",
+          "file": "packages/ui/src/components/dropdown.tsx",
+          "feature_id": "F3",
+          "priority": "medium",
+          "dependencies": ["UI-002"]
+        },
+        {
+          "id": "UI-012",
+          "workorder_id": "WO-UI-COMPONENTS-001",
+          "description": "Create Card and Badge components",
+          "file": "packages/ui/src/components/card.tsx",
+          "feature_id": "F4",
+          "priority": "high",
+          "dependencies": ["UI-002"]
+        }
+      ]
+    },
+    "6_implementation_phases": {
+      "phases": [
+        {
+          "phase": 1,
+          "name": "Setup",
+          "description": "Install dependencies and create utilities",
+          "tasks": ["UI-001", "UI-002"],
+          "deliverables": ["packages/ui/package.json", "packages/ui/src/lib/utils.ts"]
+        },
+        {
+          "phase": 2,
+          "name": "Form Components",
+          "description": "Create core form input components",
+          "tasks": ["UI-003", "UI-004", "UI-005", "UI-006"],
+          "deliverables": ["packages/ui/src/components/button.tsx", "packages/ui/src/components/input.tsx", "packages/ui/src/components/select.tsx", "packages/ui/src/components/checkbox.tsx"]
+        },
+        {
+          "phase": 3,
+          "name": "Feedback Components",
+          "description": "Create feedback and loading components",
+          "tasks": ["UI-007", "UI-008", "UI-009"],
+          "deliverables": ["packages/ui/src/components/alert.tsx", "packages/ui/src/components/toast.tsx", "packages/ui/src/components/spinner.tsx"]
+        },
+        {
+          "phase": 4,
+          "name": "Overlay Components",
+          "description": "Create modal and popover components",
+          "tasks": ["UI-010", "UI-011"],
+          "deliverables": ["packages/ui/src/components/dialog.tsx", "packages/ui/src/components/dropdown.tsx"]
+        },
+        {
+          "phase": 5,
+          "name": "Data Display",
+          "description": "Create data display components and finalize exports",
+          "tasks": ["UI-012"],
+          "deliverables": ["packages/ui/src/components/card.tsx", "packages/ui/src/components/badge.tsx"]
+        }
+      ]
+    },
+    "7_testing_strategy": {
+      "unit_tests": [
+        "Button: renders all variants correctly",
+        "Input: handles value changes and validation states",
+        "Select: opens dropdown and selects options",
+        "Dialog: opens, closes, and traps focus",
+        "Toast: displays and auto-dismisses"
+      ],
+      "integration_tests": [
+        "Form with multiple inputs submits correctly",
+        "Dialog with form handles submission",
+        "Toast notifications stack properly"
+      ]
+    },
+    "8_success_criteria": {
+      "criteria": [
+        "All 16 components render without errors",
+        "Components use CSS variables for theming",
+        "Components are keyboard accessible",
+        "TypeScript provides full prop intellisense",
+        "Components work in both light and dark mode"
+      ]
+    },
+    "9_implementation_checklist": {
+      "phase_1": [
+        "[ ] Install @radix-ui/* dependencies",
+        "[ ] Install class-variance-authority, clsx, tailwind-merge",
+        "[ ] Create cn() utility in lib/utils.ts"
+      ],
+      "phase_2": [
+        "[ ] Create Button with default, destructive, outline, ghost, link variants",
+        "[ ] Create Input with error state support",
+        "[ ] Create Textarea component",
+        "[ ] Create Label component",
+        "[ ] Create Select with Radix primitive",
+        "[ ] Create Checkbox component",
+        "[ ] Create Switch component"
+      ],
+      "phase_3": [
+        "[ ] Create Alert with default, destructive, warning, success variants",
+        "[ ] Create Toast component",
+        "[ ] Create Toaster provider",
+        "[ ] Create Spinner component",
+        "[ ] Create Skeleton component"
+      ],
+      "phase_4": [
+        "[ ] Create Dialog component",
+        "[ ] Create Dropdown menu component",
+        "[ ] Create Tooltip component"
+      ],
+      "phase_5": [
+        "[ ] Create Card with Header, Content, Footer",
+        "[ ] Create Badge with variants",
+        "[ ] Create components/index.ts barrel",
+        "[ ] Update packages/ui/src/index.ts exports"
+      ]
+    }
+  }
+}
