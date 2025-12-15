@@ -16,6 +16,10 @@
     "build:desktop": "turbo build --filter=desktop",
     "typecheck": "turbo typecheck",
     "lint": "turbo lint",
+    "test": "vitest --config packages/testing/vitest.config.ts",
+    "test:run": "vitest run --config packages/testing/vitest.config.ts",
+    "test:coverage": "vitest --coverage --config packages/testing/vitest.config.ts",
+    "test:ui": "vitest --ui --config packages/testing/vitest.config.ts",
     "clean": "turbo clean && rm -rf node_modules"
   },
   "devDependencies": {
