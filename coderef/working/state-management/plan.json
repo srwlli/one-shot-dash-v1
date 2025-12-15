@@ -52,7 +52,7 @@
       "existing_architecture": "React Context-based state in PlatformProvider (theme, capabilities, registry)",
       "files_to_create": [
         {"path": "packages/core/src/store/types.ts", "purpose": "TypeScript types for all stores"},
-        {"path": "packages/core/src/store/appStore.ts", "purpose": "App-wide state (theme, sidebar, preferences)"},
+        {"path": "packages/core/src/store/appStore.ts", "purpose": "App-wide state (sidebar, preferences) - theme stays in PlatformProvider"},
         {"path": "packages/core/src/store/widgetStore.ts", "purpose": "Widget instances and their states"},
         {"path": "packages/core/src/store/notificationStore.ts", "purpose": "Toast queue and notifications"},
         {"path": "packages/core/src/store/dataStore.ts", "purpose": "Cached API data and subscriptions"},
@@ -68,7 +68,7 @@
         {
           "id": "F1",
           "name": "App Store",
-          "description": "Global app state: theme, sidebar collapsed, user preferences, current tenant"
+          "description": "Global app state: sidebar collapsed, user preferences, current tenant (theme stays in PlatformProvider)"
         },
         {
           "id": "F2",
@@ -115,7 +115,7 @@
         {
           "id": "STATE-003",
           "workorder_id": "WO-STATE-MANAGEMENT-001",
-          "description": "Create App Store with theme and preferences",
+          "description": "Create App Store with sidebar and preferences (no theme)",
           "file": "packages/core/src/store/appStore.ts",
           "feature_id": "F1",
           "priority": "high",
@@ -202,13 +202,13 @@
     },
     "7_testing_strategy": {
       "unit_tests": [
-        "appStore: setTheme updates theme and persists",
+        "appStore: setSidebarCollapsed updates sidebar state and persists",
         "widgetStore: addWidget creates instance, removeWidget cleans up",
         "notificationStore: addToast queues notification, dismiss removes",
         "dataStore: setCache stores data, getCache retrieves with TTL check"
       ],
       "integration_tests": [
-        "Theme change propagates to all subscribed components",
+        "Sidebar state propagates to all subscribed components",
         "Widget state updates trigger re-render only in affected components",
         "Notification auto-dismiss works correctly"
       ]
@@ -229,7 +229,7 @@
         "[ ] Create store action types"
       ],
       "phase_2": [
-        "[ ] Create appStore with theme, sidebarCollapsed, preferences",
+        "[ ] Create appStore with sidebarCollapsed, preferences (no theme)",
         "[ ] Add persist middleware to appStore",
         "[ ] Create widgetStore with instances, loading, errors",
         "[ ] Add widget CRUD actions"
