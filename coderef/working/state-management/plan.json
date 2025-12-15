@@ -224,26 +224,26 @@
     },
     "9_implementation_checklist": {
       "phase_1": [
-        "[ ] Install zustand in packages/core",
-        "[ ] Create AppState, WidgetState, NotificationState, DataState types",
-        "[ ] Create store action types"
+        "[x] Install zustand in packages/core",
+        "[x] Create AppState, WidgetState, NotificationState, DataState types",
+        "[x] Create store action types"
       ],
       "phase_2": [
-        "[ ] Create appStore with sidebarCollapsed, preferences (no theme)",
-        "[ ] Add persist middleware to appStore",
-        "[ ] Create widgetStore with instances, loading, errors",
-        "[ ] Add widget CRUD actions"
+        "[x] Create appStore with sidebarCollapsed, preferences (no theme)",
+        "[x] Add persist middleware to appStore",
+        "[x] Create widgetStore with instances, loading, errors",
+        "[x] Add widget CRUD actions"
       ],
       "phase_3": [
-        "[ ] Create notificationStore with toast queue",
-        "[ ] Add toast actions: add, dismiss, dismissAll",
-        "[ ] Create dataStore with cache map",
-        "[ ] Add cache actions: set, get, invalidate"
+        "[x] Create notificationStore with toast queue",
+        "[x] Add toast actions: add, dismiss, dismissAll",
+        "[x] Create dataStore with cache map",
+        "[x] Add cache actions: set, get, invalidate"
       ],
       "phase_4": [
-        "[ ] Create store/index.ts with all exports",
-        "[ ] Create useAppStore, useWidgetStore, useNotificationStore, useDataStore hooks",
-        "[ ] Export from packages/core/src/index.ts"
+        "[x] Create store/index.ts with all exports",
+        "[x] Create useAppStore, useWidgetStore, useNotificationStore, useDataStore hooks",
+        "[x] Export from packages/core/src/index.ts"
       ]
     }
   }

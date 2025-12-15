@@ -10,7 +10,10 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build": "tsup src/index.ts --format esm --dts",
     "dev": "tsup src/index.ts --format esm --dts --watch",
@@ -18,8 +21,9 @@
     "lint": "eslint src/"
   },
   "dependencies": {
+    "@platform/config": "*",
     "@platform/sdk": "*",
-    "@platform/config": "*"
+    "zustand": "^5.0.9"
   },
   "peerDependencies": {
     "react": "^19.0.0"
