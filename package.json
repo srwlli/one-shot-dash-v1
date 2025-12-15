@@ -29,12 +29,15 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.1.0",
-    "turbo": "^2.3.3",
     "tsup": "^8.3.5",
+    "turbo": "^2.3.3",
     "typescript": "^5.7.2"
   },
   "packageManager": "npm@10.9.0",
   "engines": {
     "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "lightningcss-win32-x64-msvc": "^1.30.2"
   }
 }

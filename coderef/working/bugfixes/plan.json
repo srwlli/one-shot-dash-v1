@@ -1,0 +1,211 @@
+{
+  "META_DOCUMENTATION": {
+    "feature_name": "bugfixes",
+    "schema_version": "1.0.0",
+    "version": "1.0.0",
+    "status": "completed",
+    "generated_by": "Claude Code",
+    "has_context": true,
+    "has_analysis": true,
+    "created_at": "2025-12-15",
+    "completed_at": "2025-12-15"
+  },
+  "UNIVERSAL_PLANNING_STRUCTURE": {
+    "0_preparation": {
+      "foundation_docs": [
+        "packages/sdk/src/data/useRestApi.ts",
+        "apps/desktop/src/main.ts",
+        "apps/desktop/src/preload.ts",
+        "apps/desktop/src/ipc/index.ts",
+        "packages/core/src/platform/PlatformProvider.tsx"
+      ],
+      "reference_patterns": [
+        "React useCallback with stable dependencies",
+        "useRef for callback stability",
+        "Electron IPC bidirectional communication",
+        "next-themes integration"
+      ]
+    },
+    "1_executive_summary": {
+      "description": "Fix useRestApi infinite re-render bug and update Electron desktop wrapper for theme sync and type safety.",
+      "goal": "Eliminate infinite re-renders in useRestApi hook, enable bidirectional theme sync between Electron and React, add shared types for IPC API.",
+      "scope": "SDK hook fix + Electron integration updates",
+      "estimated_complexity": "medium"
+    },
+    "2_risk_assessment": {
+      "overall_risk": "low",
+      "risks": [
+        {
+          "risk": "useRestApi fix may change behavior for consumers",
+          "severity": "medium",
+          "mitigation": "Existing tests validate behavior is preserved"
+        },
+        {
+          "risk": "Theme sync may cause flickering during transitions",
+          "severity": "low",
+          "mitigation": "Debounce theme change events"
+        },
+        {
+          "risk": "Breaking change to preload.ts IPC API",
+          "severity": "low",
+          "mitigation": "Add types incrementally, don't change runtime behavior"
+        }
+      ]
+    },
+    "3_current_state_analysis": {
+      "existing_architecture": "useRestApi has unstable useCallback dependencies causing infinite loops. Electron theme system separate from next-themes. No shared types between Electron main and renderer.",
+      "files_to_modify": [
+        {"path": "packages/sdk/src/data/useRestApi.ts", "purpose": "Fix infinite re-render bug"},
+        {"path": "apps/desktop/src/ipc/index.ts", "purpose": "Add theme sync handlers"},
+        {"path": "packages/core/src/platform/PlatformProvider.tsx", "purpose": "Listen to Electron theme changes"},
+        {"path": "apps/desktop/package.json", "purpose": "Add build verification script"}
+      ],
+      "files_to_create": [
+        {"path": "packages/sdk/src/electron/types.ts", "purpose": "Shared ElectronAPI types"},
+        {"path": "packages/sdk/src/electron/index.ts", "purpose": "Electron types export"}
+      ]
+    },
+    "4_key_features": {
+      "features": [
+        {
+          "id": "F1",
+          "name": "useRestApi Fix",
+          "description": "Fix infinite re-render by using refs for callbacks and memoizing object dependencies"
+        },
+        {
+          "id": "F2",
+          "name": "Theme Sync",
+          "description": "Bidirectional sync between Electron nativeTheme and next-themes"
+        },
+        {
+          "id": "F3",
+          "name": "Shared Types",
+          "description": "TypeScript interfaces for ElectronAPI used by both main and renderer"
+        },
+        {
+          "id": "F4",
+          "name": "Build Verification",
+          "description": "Ensure web app is built before Electron packaging"
+        }
+      ]
+    },
+    "5_task_id_system": {
+      "workorder": {
+        "id": "WO-BUGFIX-001",
+        "name": "useRestApi Bug + Electron Updates",
+        "feature_dir": "coderef/working/bugfixes"
+      },
+      "tasks": [
+        {
+          "id": "BUG-001",
+          "workorder_id": "WO-BUGFIX-001",
+          "description": "Fix useRestApi infinite re-render bug using refs and memoization",
+          "file": "packages/sdk/src/data/useRestApi.ts",
+          "feature_id": "F1",
+          "priority": "high",
+          "dependencies": []
+        },
+        {
+          "id": "BUG-002",
+          "workorder_id": "WO-BUGFIX-001",
+          "description": "Add bidirectional theme sync between Electron and next-themes",
+          "file": "apps/desktop/src/ipc/index.ts",
+          "feature_id": "F2",
+          "priority": "high",
+          "dependencies": []
+        },
+        {
+          "id": "BUG-003",
+          "workorder_id": "WO-BUGFIX-001",
+          "description": "Update PlatformProvider to listen for Electron theme changes",
+          "file": "packages/core/src/platform/PlatformProvider.tsx",
+          "feature_id": "F2",
+          "priority": "high",
+          "dependencies": ["BUG-002"]
+        },
+        {
+          "id": "BUG-004",
+          "workorder_id": "WO-BUGFIX-001",
+          "description": "Create shared ElectronAPI types in SDK",
+          "file": "packages/sdk/src/electron/types.ts",
+          "feature_id": "F3",
+          "priority": "medium",
+          "dependencies": []
+        },
+        {
+          "id": "BUG-005",
+          "workorder_id": "WO-BUGFIX-001",
+          "description": "Add build verification script to desktop package",
+          "file": "apps/desktop/package.json",
+          "feature_id": "F4",
+          "priority": "low",
+          "dependencies": []
+        }
+      ]
+    },
+    "6_implementation_phases": {
+      "phases": [
+        {
+          "phase": 1,
+          "name": "SDK Bug Fix",
+          "description": "Fix useRestApi infinite re-render",
+          "tasks": ["BUG-001"],
+          "deliverables": ["Fixed useRestApi.ts with no infinite loop warnings"]
+        },
+        {
+          "phase": 2,
+          "name": "Electron Theme Sync",
+          "description": "Bidirectional theme synchronization",
+          "tasks": ["BUG-002", "BUG-003"],
+          "deliverables": ["Theme changes propagate between Electron and React"]
+        },
+        {
+          "phase": 3,
+          "name": "Type Safety & Build",
+          "description": "Shared types and build verification",
+          "tasks": ["BUG-004", "BUG-005"],
+          "deliverables": ["ElectronAPI types", "Build verification script"]
+        }
+      ]
+    },
+    "7_testing_strategy": {
+      "unit_tests": [
+        "useRestApi tests should pass without 'Maximum update depth exceeded' warnings",
+        "Verify useRestApi calls fetch correct number of times"
+      ],
+      "integration_tests": [
+        "Theme toggle in web updates Electron nativeTheme",
+        "OS theme change reflects in React app in Electron"
+      ]
+    },
+    "8_success_criteria": {
+      "criteria": [
+        "useRestApi tests pass without infinite loop warnings",
+        "Theme sync works bidirectionally in Electron",
+        "TypeScript catches IPC type mismatches",
+        "Desktop build succeeds with web app pre-check"
+      ]
+    },
+    "9_implementation_checklist": {
+      "phase_1": [
+        "[x] Add useRef for transform, onSuccess, onError callbacks",
+        "[x] Add useEffect to sync refs with current values",
+        "[x] Memoize headers and body with JSON.stringify",
+        "[x] Update fetchData useCallback dependencies",
+        "[x] Use refs inside fetchData instead of direct callbacks",
+        "[x] Run tests to verify no infinite loop warnings"
+      ],
+      "phase_2": [
+        "[x] Update ipc/index.ts to emit theme changes to renderer (already existed)",
+        "[x] Add IPC handler for setting nativeTheme from renderer (already existed)",
+        "[x] Update PlatformProvider to listen for electronAPI theme events",
+        "[x] Dispatch theme changes to Electron when user toggles"
+      ],
+      "phase_3": [
+        "[x] Create packages/sdk/src/electron/types.ts with ElectronAPI interface",
+        "[x] Export types from packages/sdk/src/index.ts",
+        "[x] Add prebuild script to apps/desktop/package.json"
+      ]
+    }
+  }
+}

@@ -142,7 +142,12 @@ export function useFileSystem(
         if (mountedRef.current) {
           setStatus("success");
         }
-        return result.data || new ArrayBuffer(0);
+        // Convert Buffer to ArrayBuffer if needed
+        const data = result.data;
+        if (!data) return new ArrayBuffer(0);
+        if (data instanceof ArrayBuffer) return data;
+        // Buffer -> ArrayBuffer conversion (use type assertion for SharedArrayBuffer edge case)
+        return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength) as ArrayBuffer;
       } catch (err) {
         const error = err instanceof Error ? err : new Error(String(err));
         if (mountedRef.current) {

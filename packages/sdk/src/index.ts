@@ -78,3 +78,22 @@ export {
   useWebSocket,
   useFileSystem,
 } from "./data";
+
+// Electron API Types
+export type {
+  ElectronAPI,
+  ElectronPlatformInfo,
+  ElectronWindowAPI,
+  ElectronThemeAPI,
+  ElectronFileSystemAPI,
+  ElectronNotificationsAPI,
+  ElectronAppAPI,
+  FileSystemResult,
+  FileReadResult,
+  FileBinaryResult,
+  FileEntry,
+  FileListResult,
+  FileExistsResult,
+  FileWatchChangeEvent,
+} from "./electron";
+export { isElectron, getElectronAPI } from "./electron";

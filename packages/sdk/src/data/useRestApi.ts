@@ -84,6 +84,22 @@ export function useRestApi<T = unknown>(
   // Generate cache key from config
   const cacheKey = `rest:${method}:${url}:${JSON.stringify(body || {})}`;
 
+  // Memoize object dependencies to prevent infinite re-renders
+  const headersKey = JSON.stringify(headers);
+  const bodyKey = JSON.stringify(body);
+
+  // Refs for callbacks (prevents re-renders when callbacks change)
+  const transformRef = useRef(transform);
+  const onSuccessRef = useRef(onSuccess);
+  const onErrorRef = useRef(onError);
+
+  // Keep refs in sync with latest values
+  useEffect(() => {
+    transformRef.current = transform;
+    onSuccessRef.current = onSuccess;
+    onErrorRef.current = onError;
+  });
+
   // Local state
   const [data, setData] = useState<T | undefined>(() => {
     // Check cache on init
@@ -148,7 +164,9 @@ export function useRestApi<T = unknown>(
 
         // Parse response
         const rawData = await response.json();
-        const transformedData = transform ? transform(rawData) : (rawData as T);
+        const transformedData = transformRef.current
+          ? transformRef.current(rawData)
+          : (rawData as T);
 
         // Only update if still mounted
         if (mountedRef.current) {
@@ -161,7 +179,7 @@ export function useRestApi<T = unknown>(
           setError(null);
 
           // Call success callback
-          onSuccess?.(transformedData);
+          onSuccessRef.current?.(transformedData);
         }
       } catch (err) {
         // Ignore abort errors
@@ -176,22 +194,11 @@ export function useRestApi<T = unknown>(
           setStatus("error");
 
           // Call error callback
-          onError?.(error);
+          onErrorRef.current?.(error);
         }
       }
     },
-    [
-      url,
-      method,
-      headers,
-      body,
-      timeout,
-      cacheTtl,
-      cacheKey,
-      transform,
-      onSuccess,
-      onError,
-    ]
+    [url, method, headersKey, bodyKey, timeout, cacheTtl, cacheKey]
   );
 
   // Refetch function (uses cache)

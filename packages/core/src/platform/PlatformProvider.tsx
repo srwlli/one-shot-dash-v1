@@ -124,6 +124,52 @@ export function PlatformProvider({
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, [themeMode]);
 
+  // Electron theme sync: Listen for native theme changes
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const electronAPI = (window as Window & { electronAPI?: {
+      theme: {
+        onChanged: (callback: (theme: string) => void) => () => void;
+      };
+    } }).electronAPI;
+
+    if (!electronAPI?.theme?.onChanged) return;
+
+    const unsubscribe = electronAPI.theme.onChanged((theme: string) => {
+      // Update resolved theme when Electron reports a change
+      const newTheme = theme === "dark" ? "dark" : "light";
+      setResolvedTheme(newTheme);
+
+      // Apply to document
+      document.documentElement.classList.remove("light", "dark");
+      document.documentElement.classList.add(newTheme);
+
+      // If in system mode, this is expected; if not, sync the mode
+      if (themeMode === "system") {
+        // Already handled by system mode
+      }
+    });
+
+    return unsubscribe;
+  }, [themeMode]);
+
+  // Electron theme sync: Send theme changes to Electron
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const electronAPI = (window as Window & { electronAPI?: {
+      theme: {
+        set: (theme: "light" | "dark" | "system") => Promise<boolean>;
+      };
+    } }).electronAPI;
+
+    if (!electronAPI?.theme?.set) return;
+
+    // Sync our theme mode to Electron's nativeTheme
+    electronAPI.theme.set(themeMode);
+  }, [themeMode]);
+
   // Listen for theme change events from widgets
   useEffect(() => {
     const handleThemeChange = (event: Event) => {
