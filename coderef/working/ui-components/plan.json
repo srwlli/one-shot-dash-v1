@@ -7,7 +7,8 @@
     "generated_by": "Claude Code",
     "has_context": false,
     "has_analysis": false,
-    "created_at": "2025-12-14"
+    "created_at": "2025-12-14",
+    "project": "business-dash"
   },
   "UNIVERSAL_PLANNING_STRUCTURE": {
     "0_preparation": {
@@ -51,28 +52,88 @@
     "3_current_state_analysis": {
       "existing_architecture": "Empty @platform/ui package with only globals.css styles export",
       "files_to_create": [
-        {"path": "packages/ui/src/lib/utils.ts", "purpose": "cn() utility for class merging"},
-        {"path": "packages/ui/src/components/button.tsx", "purpose": "Button with variants"},
-        {"path": "packages/ui/src/components/input.tsx", "purpose": "Input field component"},
-        {"path": "packages/ui/src/components/textarea.tsx", "purpose": "Textarea component"},
-        {"path": "packages/ui/src/components/label.tsx", "purpose": "Form label component"},
-        {"path": "packages/ui/src/components/select.tsx", "purpose": "Select dropdown component"},
-        {"path": "packages/ui/src/components/checkbox.tsx", "purpose": "Checkbox component"},
-        {"path": "packages/ui/src/components/switch.tsx", "purpose": "Toggle switch component"},
-        {"path": "packages/ui/src/components/alert.tsx", "purpose": "Alert message component"},
-        {"path": "packages/ui/src/components/toast.tsx", "purpose": "Toast notification system"},
-        {"path": "packages/ui/src/components/spinner.tsx", "purpose": "Loading spinner"},
-        {"path": "packages/ui/src/components/skeleton.tsx", "purpose": "Loading skeleton"},
-        {"path": "packages/ui/src/components/dialog.tsx", "purpose": "Modal dialog component"},
-        {"path": "packages/ui/src/components/dropdown.tsx", "purpose": "Dropdown menu component"},
-        {"path": "packages/ui/src/components/tooltip.tsx", "purpose": "Tooltip component"},
-        {"path": "packages/ui/src/components/card.tsx", "purpose": "Card container component"},
-        {"path": "packages/ui/src/components/badge.tsx", "purpose": "Badge/tag component"},
-        {"path": "packages/ui/src/components/index.ts", "purpose": "Component barrel export"}
+        {
+          "path": "packages/ui/src/lib/utils.ts",
+          "purpose": "cn() utility for class merging"
+        },
+        {
+          "path": "packages/ui/src/components/button.tsx",
+          "purpose": "Button with variants"
+        },
+        {
+          "path": "packages/ui/src/components/input.tsx",
+          "purpose": "Input field component"
+        },
+        {
+          "path": "packages/ui/src/components/textarea.tsx",
+          "purpose": "Textarea component"
+        },
+        {
+          "path": "packages/ui/src/components/label.tsx",
+          "purpose": "Form label component"
+        },
+        {
+          "path": "packages/ui/src/components/select.tsx",
+          "purpose": "Select dropdown component"
+        },
+        {
+          "path": "packages/ui/src/components/checkbox.tsx",
+          "purpose": "Checkbox component"
+        },
+        {
+          "path": "packages/ui/src/components/switch.tsx",
+          "purpose": "Toggle switch component"
+        },
+        {
+          "path": "packages/ui/src/components/alert.tsx",
+          "purpose": "Alert message component"
+        },
+        {
+          "path": "packages/ui/src/components/toast.tsx",
+          "purpose": "Toast notification system"
+        },
+        {
+          "path": "packages/ui/src/components/spinner.tsx",
+          "purpose": "Loading spinner"
+        },
+        {
+          "path": "packages/ui/src/components/skeleton.tsx",
+          "purpose": "Loading skeleton"
+        },
+        {
+          "path": "packages/ui/src/components/dialog.tsx",
+          "purpose": "Modal dialog component"
+        },
+        {
+          "path": "packages/ui/src/components/dropdown.tsx",
+          "purpose": "Dropdown menu component"
+        },
+        {
+          "path": "packages/ui/src/components/tooltip.tsx",
+          "purpose": "Tooltip component"
+        },
+        {
+          "path": "packages/ui/src/components/card.tsx",
+          "purpose": "Card container component"
+        },
+        {
+          "path": "packages/ui/src/components/badge.tsx",
+          "purpose": "Badge/tag component"
+        },
+        {
+          "path": "packages/ui/src/components/index.ts",
+          "purpose": "Component barrel export"
+        }
       ],
       "files_to_modify": [
-        {"path": "packages/ui/package.json", "purpose": "Add Radix UI and utility dependencies"},
-        {"path": "packages/ui/src/index.ts", "purpose": "Export components"}
+        {
+          "path": "packages/ui/package.json",
+          "purpose": "Add Radix UI and utility dependencies"
+        },
+        {
+          "path": "packages/ui/src/index.ts",
+          "purpose": "Export components"
+        }
       ]
     },
     "4_key_features": {
@@ -122,7 +183,9 @@
           "file": "packages/ui/src/lib/utils.ts",
           "feature_id": "F1",
           "priority": "high",
-          "dependencies": ["UI-001"]
+          "dependencies": [
+            "UI-001"
+          ]
         },
         {
           "id": "UI-003",
@@ -131,7 +194,9 @@
           "file": "packages/ui/src/components/button.tsx",
           "feature_id": "F1",
           "priority": "high",
-          "dependencies": ["UI-002"]
+          "dependencies": [
+            "UI-002"
+          ]
         },
         {
           "id": "UI-004",
@@ -140,7 +205,9 @@
           "file": "packages/ui/src/components/input.tsx",
           "feature_id": "F1",
           "priority": "high",
-          "dependencies": ["UI-002"]
+          "dependencies": [
+            "UI-002"
+          ]
         },
         {
           "id": "UI-005",
@@ -149,7 +216,9 @@
           "file": "packages/ui/src/components/select.tsx",
           "feature_id": "F1",
           "priority": "high",
-          "dependencies": ["UI-002"]
+          "dependencies": [
+            "UI-002"
+          ]
         },
         {
           "id": "UI-006",
@@ -158,7 +227,9 @@
           "file": "packages/ui/src/components/checkbox.tsx",
           "feature_id": "F1",
           "priority": "medium",
-          "dependencies": ["UI-002"]
+          "dependencies": [
+            "UI-002"
+          ]
         },
         {
           "id": "UI-007",
@@ -167,7 +238,9 @@
           "file": "packages/ui/src/components/alert.tsx",
           "feature_id": "F2",
           "priority": "medium",
-          "dependencies": ["UI-002"]
+          "dependencies": [
+            "UI-002"
+          ]
         },
         {
           "id": "UI-008",
@@ -176,7 +249,9 @@
           "file": "packages/ui/src/components/toast.tsx",
           "feature_id": "F2",
           "priority": "medium",
-          "dependencies": ["UI-002"]
+          "dependencies": [
+            "UI-002"
+          ]
         },
         {
           "id": "UI-009",
@@ -185,7 +260,9 @@
           "file": "packages/ui/src/components/spinner.tsx",
           "feature_id": "F2",
           "priority": "low",
-          "dependencies": ["UI-002"]
+          "dependencies": [
+            "UI-002"
+          ]
         },
         {
           "id": "UI-010",
@@ -194,7 +271,9 @@
           "file": "packages/ui/src/components/dialog.tsx",
           "feature_id": "F3",
           "priority": "high",
-          "dependencies": ["UI-002"]
+          "dependencies": [
+            "UI-002"
+          ]
         },
         {
           "id": "UI-011",
@@ -203,7 +282,9 @@
           "file": "packages/ui/src/components/dropdown.tsx",
           "feature_id": "F3",
           "priority": "medium",
-          "dependencies": ["UI-002"]
+          "dependencies": [
+            "UI-002"
+          ]
         },
         {
           "id": "UI-012",
@@ -212,7 +293,9 @@
           "file": "packages/ui/src/components/card.tsx",
           "feature_id": "F4",
           "priority": "high",
-          "dependencies": ["UI-002"]
+          "dependencies": [
+            "UI-002"
+          ]
         }
       ]
     },
@@ -222,36 +305,71 @@
           "phase": 1,
           "name": "Setup",
           "description": "Install dependencies and create utilities",
-          "tasks": ["UI-001", "UI-002"],
-          "deliverables": ["packages/ui/package.json", "packages/ui/src/lib/utils.ts"]
+          "tasks": [
+            "UI-001",
+            "UI-002"
+          ],
+          "deliverables": [
+            "packages/ui/package.json",
+            "packages/ui/src/lib/utils.ts"
+          ]
         },
         {
           "phase": 2,
           "name": "Form Components",
           "description": "Create core form input components",
-          "tasks": ["UI-003", "UI-004", "UI-005", "UI-006"],
-          "deliverables": ["packages/ui/src/components/button.tsx", "packages/ui/src/components/input.tsx", "packages/ui/src/components/select.tsx", "packages/ui/src/components/checkbox.tsx"]
+          "tasks": [
+            "UI-003",
+            "UI-004",
+            "UI-005",
+            "UI-006"
+          ],
+          "deliverables": [
+            "packages/ui/src/components/button.tsx",
+            "packages/ui/src/components/input.tsx",
+            "packages/ui/src/components/select.tsx",
+            "packages/ui/src/components/checkbox.tsx"
+          ]
         },
         {
           "phase": 3,
           "name": "Feedback Components",
           "description": "Create feedback and loading components",
-          "tasks": ["UI-007", "UI-008", "UI-009"],
-          "deliverables": ["packages/ui/src/components/alert.tsx", "packages/ui/src/components/toast.tsx", "packages/ui/src/components/spinner.tsx"]
+          "tasks": [
+            "UI-007",
+            "UI-008",
+            "UI-009"
+          ],
+          "deliverables": [
+            "packages/ui/src/components/alert.tsx",
+            "packages/ui/src/components/toast.tsx",
+            "packages/ui/src/components/spinner.tsx"
+          ]
         },
         {
           "phase": 4,
           "name": "Overlay Components",
           "description": "Create modal and popover components",
-          "tasks": ["UI-010", "UI-011"],
-          "deliverables": ["packages/ui/src/components/dialog.tsx", "packages/ui/src/components/dropdown.tsx"]
+          "tasks": [
+            "UI-010",
+            "UI-011"
+          ],
+          "deliverables": [
+            "packages/ui/src/components/dialog.tsx",
+            "packages/ui/src/components/dropdown.tsx"
+          ]
         },
         {
           "phase": 5,
           "name": "Data Display",
           "description": "Create data display components and finalize exports",
-          "tasks": ["UI-012"],
-          "deliverables": ["packages/ui/src/components/card.tsx", "packages/ui/src/components/badge.tsx"]
+          "tasks": [
+            "UI-012"
+          ],
+          "deliverables": [
+            "packages/ui/src/components/card.tsx",
+            "packages/ui/src/components/badge.tsx"
+          ]
         }
       ]
     },

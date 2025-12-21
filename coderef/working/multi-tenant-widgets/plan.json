@@ -8,7 +8,8 @@
     "has_context": true,
     "has_analysis": true,
     "created_at": "2025-12-15",
-    "completed_at": "2025-12-15"
+    "completed_at": "2025-12-15",
+    "project": "business-dash"
   },
   "UNIVERSAL_PLANNING_STRUCTURE": {
     "0_preparation": {
@@ -50,9 +51,18 @@
     "3_current_state_analysis": {
       "existing_architecture": "widgetStore is global singleton with no tenant awareness. theme-toggle widget duplicates UI component code instead of importing it.",
       "files_to_modify": [
-        {"path": "packages/core/src/store/widgetStore.ts", "purpose": "Add tenant isolation"},
-        {"path": "packages/core/src/store/types.ts", "purpose": "Add tenantId to WidgetInstance type"},
-        {"path": "packages/widgets/src/theme-toggle/Widget.tsx", "purpose": "Refactor to use @platform/ui ThemeToggle"}
+        {
+          "path": "packages/core/src/store/widgetStore.ts",
+          "purpose": "Add tenant isolation"
+        },
+        {
+          "path": "packages/core/src/store/types.ts",
+          "purpose": "Add tenantId to WidgetInstance type"
+        },
+        {
+          "path": "packages/widgets/src/theme-toggle/Widget.tsx",
+          "purpose": "Refactor to use @platform/ui ThemeToggle"
+        }
       ],
       "files_to_create": []
     },
@@ -93,7 +103,9 @@
           "file": "packages/core/src/store/widgetStore.ts",
           "feature_id": "F1",
           "priority": "high",
-          "dependencies": ["MTW-001"]
+          "dependencies": [
+            "MTW-001"
+          ]
         },
         {
           "id": "MTW-003",
@@ -102,7 +114,9 @@
           "file": "packages/core/src/store/widgetStore.ts",
           "feature_id": "F1",
           "priority": "high",
-          "dependencies": ["MTW-002"]
+          "dependencies": [
+            "MTW-002"
+          ]
         },
         {
           "id": "MTW-004",
@@ -111,7 +125,9 @@
           "file": "packages/core/src/__tests__/widgetStore.test.ts",
           "feature_id": "F1",
           "priority": "medium",
-          "dependencies": ["MTW-003"]
+          "dependencies": [
+            "MTW-003"
+          ]
         },
         {
           "id": "MTW-005",
@@ -130,15 +146,27 @@
           "phase": 1,
           "name": "Widget Store Tenant Isolation",
           "description": "Add tenant support to widgetStore",
-          "tasks": ["MTW-001", "MTW-002", "MTW-003", "MTW-004"],
-          "deliverables": ["Tenant-scoped widget instance management", "Updated tests"]
+          "tasks": [
+            "MTW-001",
+            "MTW-002",
+            "MTW-003",
+            "MTW-004"
+          ],
+          "deliverables": [
+            "Tenant-scoped widget instance management",
+            "Updated tests"
+          ]
         },
         {
           "phase": 2,
           "name": "Theme Toggle Widget Refactor",
           "description": "Refactor widget to use UI component",
-          "tasks": ["MTW-005"],
-          "deliverables": ["Clean widget using @platform/ui ThemeToggle"]
+          "tasks": [
+            "MTW-005"
+          ],
+          "deliverables": [
+            "Clean widget using @platform/ui ThemeToggle"
+          ]
         }
       ]
     },

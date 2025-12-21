@@ -7,7 +7,8 @@
     "generated_by": "Claude Code",
     "has_context": false,
     "has_analysis": false,
-    "created_at": "2025-12-14"
+    "created_at": "2025-12-14",
+    "project": "business-dash"
   },
   "UNIVERSAL_PLANNING_STRUCTURE": {
     "0_preparation": {
@@ -41,12 +42,24 @@
       "existing_architecture": "2 pages: Home with Settings link, Settings with theme toggle",
       "files_to_create": [],
       "files_to_modify": [
-        {"path": "apps/web/app/page.tsx", "purpose": "Add theme toggle, remove Settings link"},
-        {"path": "packages/config/src/index.ts", "purpose": "Remove settings layout export"}
+        {
+          "path": "apps/web/app/page.tsx",
+          "purpose": "Add theme toggle, remove Settings link"
+        },
+        {
+          "path": "packages/config/src/index.ts",
+          "purpose": "Remove settings layout export"
+        }
       ],
       "files_to_delete": [
-        {"path": "apps/web/app/settings/page.tsx", "purpose": "Remove settings page"},
-        {"path": "packages/config/src/layouts/settings.json", "purpose": "Remove settings layout"}
+        {
+          "path": "apps/web/app/settings/page.tsx",
+          "purpose": "Remove settings page"
+        },
+        {
+          "path": "packages/config/src/layouts/settings.json",
+          "purpose": "Remove settings layout"
+        }
       ]
     },
     "4_key_features": {
@@ -86,7 +99,9 @@
           "file": "apps/web/app/settings/page.tsx",
           "feature_id": "F2",
           "priority": "high",
-          "dependencies": ["SIMPLIFY-001"]
+          "dependencies": [
+            "SIMPLIFY-001"
+          ]
         },
         {
           "id": "SIMPLIFY-003",
@@ -95,7 +110,9 @@
           "file": "packages/config/src/layouts/settings.json",
           "feature_id": "F2",
           "priority": "high",
-          "dependencies": ["SIMPLIFY-002"]
+          "dependencies": [
+            "SIMPLIFY-002"
+          ]
         },
         {
           "id": "SIMPLIFY-004",
@@ -104,7 +121,9 @@
           "file": "packages/config/src/index.ts",
           "feature_id": "F2",
           "priority": "high",
-          "dependencies": ["SIMPLIFY-003"]
+          "dependencies": [
+            "SIMPLIFY-003"
+          ]
         }
       ]
     },
@@ -114,14 +133,22 @@
           "phase": 1,
           "name": "Update Home",
           "description": "Add theme toggle to home page, remove Settings link",
-          "tasks": ["SIMPLIFY-001"],
-          "deliverables": ["apps/web/app/page.tsx"]
+          "tasks": [
+            "SIMPLIFY-001"
+          ],
+          "deliverables": [
+            "apps/web/app/page.tsx"
+          ]
         },
         {
           "phase": 2,
           "name": "Remove Settings",
           "description": "Delete settings page and layout, update config exports",
-          "tasks": ["SIMPLIFY-002", "SIMPLIFY-003", "SIMPLIFY-004"],
+          "tasks": [
+            "SIMPLIFY-002",
+            "SIMPLIFY-003",
+            "SIMPLIFY-004"
+          ],
           "deliverables": []
         }
       ]

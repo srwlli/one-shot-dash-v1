@@ -1,0 +1,420 @@
+{
+  "META_DOCUMENTATION": {
+    "feature_name": "testing",
+    "schema_version": "1.0.0",
+    "version": "1.0.0",
+    "status": "planned",
+    "generated_by": "Claude Code",
+    "has_context": false,
+    "has_analysis": true,
+    "created_at": "2025-12-15",
+    "project": "business-dash"
+  },
+  "UNIVERSAL_PLANNING_STRUCTURE": {
+    "0_preparation": {
+      "foundation_docs": [
+        "packages/config/src/schema.ts",
+        "packages/core/src/store/appStore.ts",
+        "packages/core/src/dashboard/WidgetRegistry.ts",
+        "packages/sdk/src/useWidget.tsx",
+        "packages/ui/src/components/button.tsx"
+      ],
+      "reference_patterns": [
+        "Vitest configuration for monorepos",
+        "Testing Library best practices",
+        "Zustand store testing patterns",
+        "React hook testing with renderHook"
+      ]
+    },
+    "1_executive_summary": {
+      "description": "Create a comprehensive testing infrastructure for the Business Dashboard monorepo using Vitest, @testing-library/react, and happy-dom.",
+      "goal": "Establish a packages/testing package with shared utilities, mocks, and test files for all platform packages.",
+      "scope": "New testing package + test files for config, core, sdk, ui, widgets packages",
+      "estimated_complexity": "medium"
+    },
+    "2_risk_assessment": {
+      "overall_risk": "low",
+      "risks": [
+        {
+          "risk": "ESM compatibility issues with test framework",
+          "severity": "medium",
+          "mitigation": "Use Vitest which has native ESM support"
+        },
+        {
+          "risk": "Zustand store testing complexity",
+          "severity": "low",
+          "mitigation": "Use store reset patterns between tests"
+        },
+        {
+          "risk": "React 19 compatibility",
+          "severity": "low",
+          "mitigation": "Use latest @testing-library/react"
+        }
+      ]
+    },
+    "3_current_state_analysis": {
+      "existing_architecture": "No testing infrastructure exists. TypeScript strict mode enabled. ESM modules throughout.",
+      "files_to_create": [
+        {
+          "path": "packages/testing/package.json",
+          "purpose": "Testing package configuration"
+        },
+        {
+          "path": "packages/testing/tsconfig.json",
+          "purpose": "TypeScript config for tests"
+        },
+        {
+          "path": "packages/testing/vitest.config.ts",
+          "purpose": "Vitest configuration"
+        },
+        {
+          "path": "packages/testing/src/setup.ts",
+          "purpose": "Global test setup"
+        },
+        {
+          "path": "packages/testing/src/index.ts",
+          "purpose": "Public exports"
+        },
+        {
+          "path": "packages/testing/src/mocks/index.ts",
+          "purpose": "Shared mocks"
+        },
+        {
+          "path": "packages/testing/src/utils/render.tsx",
+          "purpose": "Custom render function"
+        },
+        {
+          "path": "packages/testing/src/utils/store.ts",
+          "purpose": "Store test helpers"
+        },
+        {
+          "path": "packages/config/src/__tests__/schema.test.ts",
+          "purpose": "Config validation tests"
+        },
+        {
+          "path": "packages/core/src/__tests__/appStore.test.ts",
+          "purpose": "App store tests"
+        },
+        {
+          "path": "packages/core/src/__tests__/widgetStore.test.ts",
+          "purpose": "Widget store tests"
+        },
+        {
+          "path": "packages/core/src/__tests__/notificationStore.test.ts",
+          "purpose": "Notification store tests"
+        },
+        {
+          "path": "packages/core/src/__tests__/dataStore.test.ts",
+          "purpose": "Data store tests"
+        },
+        {
+          "path": "packages/core/src/__tests__/WidgetRegistry.test.ts",
+          "purpose": "Widget registry tests"
+        },
+        {
+          "path": "packages/sdk/src/__tests__/useWidget.test.tsx",
+          "purpose": "Widget hook tests"
+        },
+        {
+          "path": "packages/sdk/src/__tests__/useRestApi.test.ts",
+          "purpose": "REST API hook tests"
+        },
+        {
+          "path": "packages/ui/src/__tests__/Button.test.tsx",
+          "purpose": "Button component tests"
+        },
+        {
+          "path": "packages/widgets/src/__tests__/ComingSoonCard.test.tsx",
+          "purpose": "Widget tests"
+        }
+      ],
+      "files_to_modify": [
+        {
+          "path": "package.json",
+          "purpose": "Add test scripts and devDependencies"
+        },
+        {
+          "path": "turbo.json",
+          "purpose": "Add test task to pipeline"
+        }
+      ]
+    },
+    "4_key_features": {
+      "features": [
+        {
+          "id": "F1",
+          "name": "Testing Package",
+          "description": "Shared testing utilities, mocks, and configuration"
+        },
+        {
+          "id": "F2",
+          "name": "Store Tests",
+          "description": "Unit tests for all Zustand stores"
+        },
+        {
+          "id": "F3",
+          "name": "Hook Tests",
+          "description": "Tests for SDK hooks using renderHook"
+        },
+        {
+          "id": "F4",
+          "name": "Component Tests",
+          "description": "Tests for UI components and widgets"
+        }
+      ]
+    },
+    "5_task_id_system": {
+      "workorder": {
+        "id": "WO-TESTING-001",
+        "name": "Comprehensive Test Package",
+        "feature_dir": "coderef/working/testing"
+      },
+      "tasks": [
+        {
+          "id": "TEST-001",
+          "workorder_id": "WO-TESTING-001",
+          "description": "Create packages/testing with Vitest config",
+          "file": "packages/testing/",
+          "feature_id": "F1",
+          "priority": "high",
+          "dependencies": []
+        },
+        {
+          "id": "TEST-002",
+          "workorder_id": "WO-TESTING-001",
+          "description": "Create test utilities (render, store helpers)",
+          "file": "packages/testing/src/utils/",
+          "feature_id": "F1",
+          "priority": "high",
+          "dependencies": [
+            "TEST-001"
+          ]
+        },
+        {
+          "id": "TEST-003",
+          "workorder_id": "WO-TESTING-001",
+          "description": "Create shared mocks (React, Zustand, Platform)",
+          "file": "packages/testing/src/mocks/",
+          "feature_id": "F1",
+          "priority": "high",
+          "dependencies": [
+            "TEST-001"
+          ]
+        },
+        {
+          "id": "TEST-004",
+          "workorder_id": "WO-TESTING-001",
+          "description": "Add test scripts to root package.json and turbo.json",
+          "file": "package.json",
+          "feature_id": "F1",
+          "priority": "high",
+          "dependencies": [
+            "TEST-001"
+          ]
+        },
+        {
+          "id": "TEST-005",
+          "workorder_id": "WO-TESTING-001",
+          "description": "Write config package tests (validation functions)",
+          "file": "packages/config/src/__tests__/",
+          "feature_id": "F2",
+          "priority": "medium",
+          "dependencies": [
+            "TEST-002"
+          ]
+        },
+        {
+          "id": "TEST-006",
+          "workorder_id": "WO-TESTING-001",
+          "description": "Write core store tests (appStore, widgetStore)",
+          "file": "packages/core/src/__tests__/",
+          "feature_id": "F2",
+          "priority": "medium",
+          "dependencies": [
+            "TEST-002"
+          ]
+        },
+        {
+          "id": "TEST-007",
+          "workorder_id": "WO-TESTING-001",
+          "description": "Write core store tests (notificationStore, dataStore)",
+          "file": "packages/core/src/__tests__/",
+          "feature_id": "F2",
+          "priority": "medium",
+          "dependencies": [
+            "TEST-002"
+          ]
+        },
+        {
+          "id": "TEST-008",
+          "workorder_id": "WO-TESTING-001",
+          "description": "Write WidgetRegistry tests",
+          "file": "packages/core/src/__tests__/WidgetRegistry.test.ts",
+          "feature_id": "F2",
+          "priority": "medium",
+          "dependencies": [
+            "TEST-002"
+          ]
+        },
+        {
+          "id": "TEST-009",
+          "workorder_id": "WO-TESTING-001",
+          "description": "Write SDK hook tests (useWidget, useWidgetStorage)",
+          "file": "packages/sdk/src/__tests__/",
+          "feature_id": "F3",
+          "priority": "medium",
+          "dependencies": [
+            "TEST-002",
+            "TEST-003"
+          ]
+        },
+        {
+          "id": "TEST-010",
+          "workorder_id": "WO-TESTING-001",
+          "description": "Write SDK data hook tests (useRestApi, useWebSocket)",
+          "file": "packages/sdk/src/__tests__/",
+          "feature_id": "F3",
+          "priority": "medium",
+          "dependencies": [
+            "TEST-002",
+            "TEST-003"
+          ]
+        },
+        {
+          "id": "TEST-011",
+          "workorder_id": "WO-TESTING-001",
+          "description": "Write UI component tests (Button, Card, Dialog)",
+          "file": "packages/ui/src/__tests__/",
+          "feature_id": "F4",
+          "priority": "low",
+          "dependencies": [
+            "TEST-002"
+          ]
+        },
+        {
+          "id": "TEST-012",
+          "workorder_id": "WO-TESTING-001",
+          "description": "Write widget tests (ComingSoonCard, ThemeToggle)",
+          "file": "packages/widgets/src/__tests__/",
+          "feature_id": "F4",
+          "priority": "low",
+          "dependencies": [
+            "TEST-002",
+            "TEST-003"
+          ]
+        }
+      ]
+    },
+    "6_implementation_phases": {
+      "phases": [
+        {
+          "phase": 1,
+          "name": "Infrastructure",
+          "description": "Set up testing package and utilities",
+          "tasks": [
+            "TEST-001",
+            "TEST-002",
+            "TEST-003",
+            "TEST-004"
+          ],
+          "deliverables": [
+            "packages/testing/",
+            "package.json scripts"
+          ]
+        },
+        {
+          "phase": 2,
+          "name": "Core Tests",
+          "description": "Test config validation and Zustand stores",
+          "tasks": [
+            "TEST-005",
+            "TEST-006",
+            "TEST-007",
+            "TEST-008"
+          ],
+          "deliverables": [
+            "packages/config/__tests__/",
+            "packages/core/__tests__/"
+          ]
+        },
+        {
+          "phase": 3,
+          "name": "SDK Tests",
+          "description": "Test SDK hooks",
+          "tasks": [
+            "TEST-009",
+            "TEST-010"
+          ],
+          "deliverables": [
+            "packages/sdk/__tests__/"
+          ]
+        },
+        {
+          "phase": 4,
+          "name": "Component Tests",
+          "description": "Test UI components and widgets",
+          "tasks": [
+            "TEST-011",
+            "TEST-012"
+          ],
+          "deliverables": [
+            "packages/ui/__tests__/",
+            "packages/widgets/__tests__/"
+          ]
+        }
+      ]
+    },
+    "7_testing_strategy": {
+      "unit_tests": [
+        "Config validation functions",
+        "Store state mutations and selectors",
+        "WidgetRegistry CRUD operations",
+        "SDK hook behavior"
+      ],
+      "integration_tests": [
+        "Store persistence with localStorage",
+        "Component rendering with providers",
+        "Hook composition"
+      ]
+    },
+    "8_success_criteria": {
+      "criteria": [
+        "All tests pass",
+        "Coverage > 70%",
+        "Tests complete in < 30 seconds",
+        "CI-ready configuration",
+        "No flaky tests"
+      ]
+    },
+    "9_implementation_checklist": {
+      "phase_1": [
+        "[ ] Create packages/testing/package.json with dependencies",
+        "[ ] Create vitest.config.ts with workspace config",
+        "[ ] Create setup.ts with global mocks",
+        "[ ] Create utils/render.tsx with provider wrapper",
+        "[ ] Create utils/store.ts with reset helpers",
+        "[ ] Add test scripts to root package.json",
+        "[ ] Add test task to turbo.json"
+      ],
+      "phase_2": [
+        "[ ] Write schema.test.ts for config validation",
+        "[ ] Write appStore.test.ts",
+        "[ ] Write widgetStore.test.ts",
+        "[ ] Write notificationStore.test.ts",
+        "[ ] Write dataStore.test.ts",
+        "[ ] Write WidgetRegistry.test.ts"
+      ],
+      "phase_3": [
+        "[ ] Write useWidget.test.tsx",
+        "[ ] Write useWidgetStorage.test.ts",
+        "[ ] Write useRestApi.test.ts",
+        "[ ] Write useWebSocket.test.ts"
+      ],
+      "phase_4": [
+        "[ ] Write Button.test.tsx",
+        "[ ] Write Card.test.tsx",
+        "[ ] Write ComingSoonCard.test.tsx"
+      ]
+    }
+  }
+}

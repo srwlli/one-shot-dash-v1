@@ -7,7 +7,8 @@
     "generated_by": "Claude Code",
     "has_context": false,
     "has_analysis": false,
-    "created_at": "2025-12-14"
+    "created_at": "2025-12-14",
+    "project": "business-dash"
   },
   "UNIVERSAL_PLANNING_STRUCTURE": {
     "0_preparation": {
@@ -51,16 +52,40 @@
     "3_current_state_analysis": {
       "existing_architecture": "React Context-based state in PlatformProvider (theme, capabilities, registry)",
       "files_to_create": [
-        {"path": "packages/core/src/store/types.ts", "purpose": "TypeScript types for all stores"},
-        {"path": "packages/core/src/store/appStore.ts", "purpose": "App-wide state (sidebar, preferences) - theme stays in PlatformProvider"},
-        {"path": "packages/core/src/store/widgetStore.ts", "purpose": "Widget instances and their states"},
-        {"path": "packages/core/src/store/notificationStore.ts", "purpose": "Toast queue and notifications"},
-        {"path": "packages/core/src/store/dataStore.ts", "purpose": "Cached API data and subscriptions"},
-        {"path": "packages/core/src/store/index.ts", "purpose": "Store exports and hooks"}
+        {
+          "path": "packages/core/src/store/types.ts",
+          "purpose": "TypeScript types for all stores"
+        },
+        {
+          "path": "packages/core/src/store/appStore.ts",
+          "purpose": "App-wide state (sidebar, preferences) - theme stays in PlatformProvider"
+        },
+        {
+          "path": "packages/core/src/store/widgetStore.ts",
+          "purpose": "Widget instances and their states"
+        },
+        {
+          "path": "packages/core/src/store/notificationStore.ts",
+          "purpose": "Toast queue and notifications"
+        },
+        {
+          "path": "packages/core/src/store/dataStore.ts",
+          "purpose": "Cached API data and subscriptions"
+        },
+        {
+          "path": "packages/core/src/store/index.ts",
+          "purpose": "Store exports and hooks"
+        }
       ],
       "files_to_modify": [
-        {"path": "packages/core/package.json", "purpose": "Add zustand dependency"},
-        {"path": "packages/core/src/index.ts", "purpose": "Export store hooks"}
+        {
+          "path": "packages/core/package.json",
+          "purpose": "Add zustand dependency"
+        },
+        {
+          "path": "packages/core/src/index.ts",
+          "purpose": "Export store hooks"
+        }
       ]
     },
     "4_key_features": {
@@ -110,7 +135,9 @@
           "file": "packages/core/src/store/types.ts",
           "feature_id": "F1",
           "priority": "high",
-          "dependencies": ["STATE-001"]
+          "dependencies": [
+            "STATE-001"
+          ]
         },
         {
           "id": "STATE-003",
@@ -119,7 +146,9 @@
           "file": "packages/core/src/store/appStore.ts",
           "feature_id": "F1",
           "priority": "high",
-          "dependencies": ["STATE-002"]
+          "dependencies": [
+            "STATE-002"
+          ]
         },
         {
           "id": "STATE-004",
@@ -128,7 +157,9 @@
           "file": "packages/core/src/store/widgetStore.ts",
           "feature_id": "F2",
           "priority": "high",
-          "dependencies": ["STATE-002"]
+          "dependencies": [
+            "STATE-002"
+          ]
         },
         {
           "id": "STATE-005",
@@ -137,7 +168,9 @@
           "file": "packages/core/src/store/notificationStore.ts",
           "feature_id": "F3",
           "priority": "medium",
-          "dependencies": ["STATE-002"]
+          "dependencies": [
+            "STATE-002"
+          ]
         },
         {
           "id": "STATE-006",
@@ -146,7 +179,9 @@
           "file": "packages/core/src/store/dataStore.ts",
           "feature_id": "F4",
           "priority": "medium",
-          "dependencies": ["STATE-002"]
+          "dependencies": [
+            "STATE-002"
+          ]
         },
         {
           "id": "STATE-007",
@@ -155,7 +190,12 @@
           "file": "packages/core/src/store/index.ts",
           "feature_id": "F1",
           "priority": "low",
-          "dependencies": ["STATE-003", "STATE-004", "STATE-005", "STATE-006"]
+          "dependencies": [
+            "STATE-003",
+            "STATE-004",
+            "STATE-005",
+            "STATE-006"
+          ]
         },
         {
           "id": "STATE-008",
@@ -164,7 +204,9 @@
           "file": "packages/core/src/index.ts",
           "feature_id": "F1",
           "priority": "low",
-          "dependencies": ["STATE-007"]
+          "dependencies": [
+            "STATE-007"
+          ]
         }
       ]
     },
@@ -174,29 +216,53 @@
           "phase": 1,
           "name": "Setup",
           "description": "Install Zustand and create type definitions",
-          "tasks": ["STATE-001", "STATE-002"],
-          "deliverables": ["packages/core/package.json", "packages/core/src/store/types.ts"]
+          "tasks": [
+            "STATE-001",
+            "STATE-002"
+          ],
+          "deliverables": [
+            "packages/core/package.json",
+            "packages/core/src/store/types.ts"
+          ]
         },
         {
           "phase": 2,
           "name": "Core Stores",
           "description": "Create App and Widget stores",
-          "tasks": ["STATE-003", "STATE-004"],
-          "deliverables": ["packages/core/src/store/appStore.ts", "packages/core/src/store/widgetStore.ts"]
+          "tasks": [
+            "STATE-003",
+            "STATE-004"
+          ],
+          "deliverables": [
+            "packages/core/src/store/appStore.ts",
+            "packages/core/src/store/widgetStore.ts"
+          ]
         },
         {
           "phase": 3,
           "name": "Support Stores",
           "description": "Create Notification and Data stores",
-          "tasks": ["STATE-005", "STATE-006"],
-          "deliverables": ["packages/core/src/store/notificationStore.ts", "packages/core/src/store/dataStore.ts"]
+          "tasks": [
+            "STATE-005",
+            "STATE-006"
+          ],
+          "deliverables": [
+            "packages/core/src/store/notificationStore.ts",
+            "packages/core/src/store/dataStore.ts"
+          ]
         },
         {
           "phase": 4,
           "name": "Integration",
           "description": "Export stores and integrate with existing code",
-          "tasks": ["STATE-007", "STATE-008"],
-          "deliverables": ["packages/core/src/store/index.ts", "packages/core/src/index.ts"]
+          "tasks": [
+            "STATE-007",
+            "STATE-008"
+          ],
+          "deliverables": [
+            "packages/core/src/store/index.ts",
+            "packages/core/src/index.ts"
+          ]
         }
       ]
     },
