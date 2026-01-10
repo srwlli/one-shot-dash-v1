@@ -4,7 +4,7 @@
     "workorder_id": "WO-STORYBOOK-SETUP-001",
     "version": "1.0.0",
     "status": "planning",
-    "generated_by": "PlanningGenerator",
+    "generated_by": "Manual Planning",
     "has_context": true,
     "has_analysis": true,
     "uds": {
@@ -16,262 +16,642 @@
     }
   },
   "UNIVERSAL_PLANNING_STRUCTURE": {
-    "0_preparation": {},
+    "0_preparation": {
+      "foundation_docs": [
+        "coderef/foundation-docs/COMPONENTS.md",
+        "coderef/foundation-docs/ARCHITECTURE.md",
+        "packages/ui/src/components/index.ts",
+        "packages/widgets/src/index.ts"
+      ],
+      "reference_patterns": [
+        "Storybook 8 with React 19",
+        "Turborepo monorepo integration",
+        "Radix UI component patterns",
+        "Tailwind CSS with CSS variables"
+      ],
+      "key_decisions": [
+        "Storybook installed in packages/ui (not root)",
+        "Use Storybook 8.0+ for React 19 support",
+        "Configure for Vite builder (faster than Webpack)",
+        "Create shared decorators for widget context mocking"
+      ]
+    },
     "1_executive_summary": {
-      "purpose": "Add Storybook to the Business Dashboard monorepo for documenting and testing UI components and widgets visually",
-      "value_proposition": "Document and test UI components and widgets visually",
-      "real_world_analogy": "Similar to building storybook-setup - systematically implementing each requirement to deliver complete functionality",
-      "use_case": "User requests storybook-setup \u2192 System implements: Storybook 8 for packages/ui, Support for React 19, Integration with Turborepo \u2192 Feature is functional",
-      "output": "Implemented 5 requirements: Storybook 8 for packages/ui, Support for React 19, Integration with Turborepo"
+      "purpose": "Add Storybook 8 to the Business Dashboard monorepo for visually documenting and testing UI components and widgets. This enables component-driven development, visual regression testing, and serves as a living style guide.",
+      "value_proposition": "Provides visual documentation for 20+ UI components and widgets, enables isolated component development, supports design system documentation, and facilitates visual testing workflows.",
+      "real_world_analogy": "Like a component library showroom where developers and designers can browse, test, and document all UI building blocks in isolation before using them in the actual application.",
+      "use_case": "Developer wants to see all Button variants → Opens Storybook → Views Button stories with all variants, sizes, and states → Copies code example → Uses in widget",
+      "output": "Fully functional Storybook instance with stories for all UI components and widgets, integrated with Turborepo, accessible via npm run storybook command"
     },
     "2_risk_assessment": {
-      "overall_risk": "medium",
-      "complexity": "medium (estimated 5-15 files, 200-1000 lines)",
-      "scope": "Estimated 5 requirements affecting multiple components",
-      "file_system_risk": "low (standard code changes only)",
+      "overall_risk": "low",
+      "complexity": "medium (estimated 25-30 files, 800-1200 lines)",
+      "scope": "5 requirements: Storybook 8 setup, React 19 support, Turborepo integration, essential addons, widget context mocking",
+      "file_system_risk": "low (additive changes only, no modifications to existing components)",
       "dependencies": [
-        "Must work with existing monorepo structure"
+        "Storybook 8.0+ (React 19 compatible)",
+        "@storybook/react-vite",
+        "@storybook/addon-essentials",
+        "@storybook/addon-a11y",
+        "@storybook/addon-viewport",
+        "Must work with existing Turborepo structure",
+        "Must not break existing builds"
       ],
       "performance_concerns": [
-        "No significant performance concerns identified - monitor during implementation"
+        "Storybook build time may be slower initially",
+        "Bundle size increase for Storybook dependencies (dev-only)",
+        "Hot reload performance in Storybook dev mode"
       ],
       "security_considerations": [
-        "Follow existing security patterns - review during implementation"
+        "Storybook is dev-only tool, no production security concerns",
+        "Ensure Storybook static builds are not deployed to production by accident"
       ],
-      "breaking_changes": "none (extending existing functionality)"
+      "breaking_changes": "none (purely additive, no changes to existing code)"
     },
     "3_current_state_analysis": {
       "affected_files": [
-        "Identify during implementation based on feature scope"
+        "packages/ui/package.json (add Storybook dependencies)",
+        "packages/ui/.storybook/main.ts (new Storybook config)",
+        "packages/ui/.storybook/preview.tsx (new preview config)",
+        "packages/ui/src/components/**/*.stories.tsx (20+ new story files)",
+        "packages/widgets/src/**/*.stories.tsx (2+ new widget story files)",
+        "turbo.json (add storybook task)",
+        "README.md (update with Storybook instructions)"
       ],
       "dependencies": {
         "existing_internal": [
-          "Existing modules and components - identify during implementation"
+          "@platform/ui components (Button, Card, Input, etc.)",
+          "@platform/widgets (ComingSoonCard, ThemeToggle)",
+          "@platform/sdk (WidgetProvider, useWidget hook)",
+          "@platform/core (PlatformProvider, WidgetRegistry)",
+          "packages/ui/src/lib/utils.ts (cn utility)",
+          "packages/ui/src/styles/globals.css (theme CSS variables)"
         ],
-        "existing_external": [],
-        "new_external": [],
-        "new_internal": []
+        "existing_external": [
+          "React 19",
+          "TypeScript 5.7",
+          "Tailwind CSS 4",
+          "Radix UI primitives",
+          "Turborepo 2.3"
+        ],
+        "new_external": [
+          "@storybook/react-vite@^8.0.0",
+          "@storybook/addon-essentials@^8.0.0",
+          "@storybook/addon-a11y@^8.0.0",
+          "@storybook/addon-viewport@^8.0.0",
+          "storybook@^8.0.0"
+        ],
+        "new_internal": [
+          "packages/ui/.storybook/decorators/PlatformDecorator.tsx",
+          "packages/ui/.storybook/decorators/WidgetDecorator.tsx",
+          "packages/ui/.storybook/preview-head.html (for CSS imports)"
+        ]
       },
-      "architecture_context": "Follows existing patterns: Standard implementation patterns"
+      "architecture_context": "Monorepo structure with Turborepo. UI components in packages/ui use Radix UI + Tailwind. Widgets in packages/widgets use WidgetProvider context. Storybook will be scoped to packages/ui initially, with widget stories demonstrating context mocking patterns."
     },
     "4_key_features": {
       "primary_features": [
-        "Storybook 8 for packages/ui",
-        "Support for React 19",
-        "Integration with Turborepo",
-        "Essential addons (a11y, viewport, controls, docs)",
-        "Widget stories with context mocking"
+        {
+          "feature": "Storybook 8 Installation",
+          "description": "Install and configure Storybook 8 in packages/ui with Vite builder for fast builds and React 19 support",
+          "acceptance_criteria": [
+            "Storybook 8 installed in packages/ui",
+            "Vite builder configured",
+            "Storybook dev server starts without errors",
+            "Basic preview renders correctly"
+          ],
+          "files_affected": [
+            "packages/ui/package.json",
+            "packages/ui/.storybook/main.ts",
+            "packages/ui/.storybook/preview.tsx"
+          ]
+        },
+        {
+          "feature": "React 19 Compatibility",
+          "description": "Configure Storybook to work with React 19, ensuring all components render correctly with new React features",
+          "acceptance_criteria": [
+            "Storybook uses React 19 from peer dependencies",
+            "No React version conflicts",
+            "All components render without warnings",
+            "React 19 features (like useFormStatus) work if used"
+          ],
+          "files_affected": [
+            "packages/ui/.storybook/main.ts",
+            "packages/ui/package.json"
+          ]
+        },
+        {
+          "feature": "Turborepo Integration",
+          "description": "Add Storybook tasks to Turborepo pipeline, ensuring it builds in correct order and can be run from root",
+          "acceptance_criteria": [
+            "turbo.json includes storybook task",
+            "npm run storybook works from root",
+            "Storybook respects package dependencies",
+            "Build caching works correctly"
+          ],
+          "files_affected": [
+            "turbo.json",
+            "package.json (root scripts)"
+          ]
+        },
+        {
+          "feature": "Essential Addons",
+          "description": "Configure essential Storybook addons: Controls, Actions, Docs, A11y, Viewport for comprehensive component testing",
+          "acceptance_criteria": [
+            "Controls addon works for all component props",
+            "Actions addon logs events correctly",
+            "Docs addon generates documentation",
+            "A11y addon shows accessibility violations",
+            "Viewport addon allows responsive testing"
+          ],
+          "files_affected": [
+            "packages/ui/.storybook/main.ts",
+            "packages/ui/.storybook/preview.tsx"
+          ]
+        },
+        {
+          "feature": "UI Component Stories",
+          "description": "Create comprehensive stories for all 20 UI components (Button, Card, Input, Select, etc.) showcasing variants, sizes, and states",
+          "acceptance_criteria": [
+            "Stories exist for all 20 components",
+            "All variants and sizes demonstrated",
+            "Interactive controls work",
+            "Documentation auto-generated",
+            "Examples show real usage patterns"
+          ],
+          "files_affected": [
+            "packages/ui/src/components/button.stories.tsx",
+            "packages/ui/src/components/card.stories.tsx",
+            "packages/ui/src/components/input.stories.tsx",
+            "packages/ui/src/components/select.stories.tsx",
+            "packages/ui/src/components/checkbox.stories.tsx",
+            "packages/ui/src/components/switch.stories.tsx",
+            "packages/ui/src/components/textarea.stories.tsx",
+            "packages/ui/src/components/label.stories.tsx",
+            "packages/ui/src/components/alert.stories.tsx",
+            "packages/ui/src/components/toast.stories.tsx",
+            "packages/ui/src/components/spinner.stories.tsx",
+            "packages/ui/src/components/skeleton.stories.tsx",
+            "packages/ui/src/components/dialog.stories.tsx",
+            "packages/ui/src/components/dropdown.stories.tsx",
+            "packages/ui/src/components/tooltip.stories.tsx",
+            "packages/ui/src/components/badge.stories.tsx",
+            "packages/ui/src/components/nav.stories.tsx",
+            "packages/ui/src/components/theme-toggle.stories.tsx",
+            "packages/ui/src/components/tenant-switcher.stories.tsx"
+          ]
+        },
+        {
+          "feature": "Widget Stories with Context Mocking",
+          "description": "Create stories for widgets (ComingSoonCard, ThemeToggle) with proper WidgetProvider context mocking to demonstrate widget behavior",
+          "acceptance_criteria": [
+            "Widget stories use WidgetProvider decorator",
+            "Widget context (config, theme, capabilities) is mockable",
+            "Different widget configs can be tested",
+            "Theme variations (light/dark) work",
+            "Platform capabilities can be toggled"
+          ],
+          "files_affected": [
+            "packages/ui/.storybook/decorators/WidgetDecorator.tsx",
+            "packages/widgets/src/coming-soon-card/Widget.stories.tsx",
+            "packages/widgets/src/theme-toggle/Widget.stories.tsx"
+          ]
+        }
       ],
-      "secondary_features": [],
+      "secondary_features": [
+        {
+          "feature": "Theme Support in Stories",
+          "description": "Configure Storybook to support light/dark theme switching to test components in both themes",
+          "acceptance_criteria": [
+            "Theme toggle works in Storybook",
+            "CSS variables update correctly",
+            "Components render properly in both themes"
+          ]
+        },
+        {
+          "feature": "Component Documentation",
+          "description": "Auto-generate component documentation from stories using Storybook's Docs addon",
+          "acceptance_criteria": [
+            "Docs tab shows component API",
+            "Props table is auto-generated",
+            "Usage examples are documented"
+          ]
+        }
+      ],
       "edge_case_handling": [
-        "Empty or null input validation",
-        "Invalid input error handling",
-        "Boundary conditions and limits"
+        {
+          "scenario": "Component with missing dependencies",
+          "setup": "Story imports component that depends on context not provided",
+          "expected_behavior": "Storybook shows clear error message indicating missing provider",
+          "verification": "Error message is helpful and points to solution",
+          "error_handling": "Use decorators to provide required context"
+        },
+        {
+          "scenario": "Widget story without WidgetProvider",
+          "setup": "Widget story rendered without WidgetProvider decorator",
+          "expected_behavior": "Storybook shows error or fallback, widget doesn't crash",
+          "verification": "Error is caught gracefully",
+          "error_handling": "WidgetDecorator provides default context if missing"
+        },
+        {
+          "scenario": "Tailwind CSS not loading in Storybook",
+          "setup": "Storybook preview doesn't import globals.css",
+          "expected_behavior": "Components render without styles",
+          "verification": "Check preview-head.html or preview.tsx imports CSS",
+          "error_handling": "Ensure CSS is imported in preview configuration"
+        }
       ],
       "configuration_options": [
-        "None"
+        "Storybook port (default: 6006, configurable)",
+        "Build output directory (default: storybook-static)",
+        "Addon configuration (can enable/disable addons)"
       ]
     },
     "5_task_id_system": {
       "tasks": [
-        "SETUP-001: Create initial project structure and setup development environment with required dependencies",
-        "LOGIC-001: Implement Storybook 8 for packages/ui following existing project patterns and architecture",
-        "LOGIC-002: Implement Support for React 19 following existing project patterns and architecture",
-        "LOGIC-003: Implement Integration with Turborepo following existing project patterns and architecture",
-        "LOGIC-004: Implement Essential addons (a11y, viewport, controls, docs) following existing project patterns and architecture",
-        "LOGIC-005: Implement Widget stories with context mocking following existing project patterns and architecture",
-        "TEST-001: Write unit tests for all new functionality with minimum 80% code coverage",
-        "TEST-002: Write integration tests to verify end-to-end functionality and component interactions",
-        "DOC-001: Update documentation including README, API docs, and inline code comments for all public interfaces"
+        "SETUP-001: Install Storybook 8 dependencies in packages/ui (storybook, @storybook/react-vite, @storybook/addon-essentials, @storybook/addon-a11y, @storybook/addon-viewport)",
+        "SETUP-002: Initialize Storybook configuration in packages/ui/.storybook/ with Vite builder and React 19 support",
+        "SETUP-003: Configure Storybook preview (packages/ui/.storybook/preview.tsx) with Tailwind CSS imports, theme support, and global decorators",
+        "SETUP-004: Add Storybook tasks to turbo.json (storybook, build-storybook) with proper dependencies and caching",
+        "SETUP-005: Add npm scripts to packages/ui/package.json (storybook, build-storybook) and root package.json",
+        "IMPL-001: Create PlatformDecorator for Storybook to mock PlatformProvider context (theme, capabilities, tenantId)",
+        "IMPL-002: Create WidgetDecorator for Storybook to mock WidgetProvider context (config, manifest, theme, capabilities)",
+        "IMPL-003: Create Button story (packages/ui/src/components/button.stories.tsx) with all variants (default, destructive, outline, secondary, ghost, link) and sizes (default, sm, lg, icon)",
+        "IMPL-004: Create Card story with CardHeader, CardTitle, CardDescription, CardContent, CardFooter sub-components",
+        "IMPL-005: Create Input story with different input types, states (disabled, error), and placeholder variations",
+        "IMPL-006: Create Select story with SelectGroup, SelectItem, SelectSeparator variations",
+        "IMPL-007: Create Checkbox and Switch stories with checked/unchecked states and disabled states",
+        "IMPL-008: Create Textarea story with different sizes and states",
+        "IMPL-009: Create Label story showing association with form inputs",
+        "IMPL-010: Create Alert story with AlertTitle and AlertDescription, different variants",
+        "IMPL-011: Create Toast story with ToastTitle, ToastDescription, and different variants (default, success, error, warning, info)",
+        "IMPL-012: Create Spinner story with different sizes (sm, md, lg)",
+        "IMPL-013: Create Skeleton story showing loading state placeholders",
+        "IMPL-014: Create Dialog story with DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter",
+        "IMPL-015: Create DropdownMenu story with all sub-components (DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, etc.)",
+        "IMPL-016: Create Tooltip story with TooltipTrigger, TooltipContent, TooltipProvider",
+        "IMPL-017: Create Badge story with all variants (default, secondary, destructive, outline)",
+        "IMPL-018: Create Nav story with NavItem, NavGroup components",
+        "IMPL-019: Create ThemeToggle story with different modes (light, dark, system) and showLabels/compact options",
+        "IMPL-020: Create TenantSwitcher story with mock tenant data and onTenantChange handler",
+        "IMPL-021: Create ComingSoonCard widget story (packages/widgets/src/coming-soon-card/Widget.stories.tsx) with WidgetDecorator, testing different configs (title, description, icon)",
+        "IMPL-022: Create ThemeToggle widget story (packages/widgets/src/theme-toggle/Widget.stories.tsx) with WidgetDecorator, testing showLabels and compact options",
+        "TEST-001: Verify Storybook dev server starts without errors (npm run storybook)",
+        "TEST-002: Verify all component stories render correctly in Storybook UI",
+        "TEST-003: Verify all widget stories render correctly with context mocking",
+        "TEST-004: Verify Controls addon works for interactive prop editing",
+        "TEST-005: Verify A11y addon shows accessibility violations (test with intentionally inaccessible component)",
+        "TEST-006: Verify Viewport addon allows responsive testing",
+        "TEST-007: Verify Docs addon generates documentation automatically",
+        "TEST-008: Verify theme switching works (light/dark) in Storybook",
+        "TEST-009: Verify Storybook build completes successfully (npm run build-storybook)",
+        "TEST-010: Verify Turborepo integration (storybook task runs from root)",
+        "DOC-001: Update packages/ui/README.md with Storybook setup instructions and usage",
+        "DOC-002: Update root README.md with Storybook section in Development Workflow",
+        "DOC-003: Add Storybook link to coderef/foundation-docs/COMPONENTS.md",
+        "DOC-004: Document decorator usage patterns for future widget stories"
       ]
     },
     "6_implementation_phases": {
       "phases": [
         {
           "phase": 1,
-          "name": "Phase 1: Foundation",
-          "description": "Setup and scaffolding - create initial structure, install dependencies, configure environment",
+          "name": "Phase 1: Storybook Foundation Setup",
+          "description": "Install Storybook 8, configure Vite builder, set up basic configuration files, and integrate with Turborepo",
           "tasks": [
-            "SETUP-001"
+            "SETUP-001",
+            "SETUP-002",
+            "SETUP-003",
+            "SETUP-004",
+            "SETUP-005"
           ],
           "deliverables": [
-            "All files exist",
-            "Dependencies installed",
-            "Environment configured"
-          ]
+            "Storybook 8 installed in packages/ui",
+            ".storybook/main.ts configured with Vite builder",
+            ".storybook/preview.tsx configured with CSS imports",
+            "turbo.json updated with storybook tasks",
+            "npm run storybook starts dev server successfully"
+          ],
+          "complexity": "medium",
+          "dependencies": []
         },
         {
           "phase": 2,
-          "name": "Phase 2: Core Implementation",
-          "description": "Implement primary features and business logic following existing patterns",
+          "name": "Phase 2: Context Mocking Infrastructure",
+          "description": "Create decorators for PlatformProvider and WidgetProvider context mocking to support widget stories",
           "tasks": [
-            "LOGIC-001"
+            "IMPL-001",
+            "IMPL-002"
           ],
           "deliverables": [
-            "Happy path works end-to-end",
-            "Core functionality complete"
-          ]
+            "PlatformDecorator.tsx created with mock platform context",
+            "WidgetDecorator.tsx created with mock widget context",
+            "Decorators registered in preview.tsx",
+            "Widget stories can use decorators"
+          ],
+          "complexity": "low",
+          "dependencies": ["Phase 1"]
         },
         {
           "phase": 3,
-          "name": "Phase 3: Testing",
-          "description": "Comprehensive testing at unit, integration, and end-to-end levels",
+          "name": "Phase 3: UI Component Stories",
+          "description": "Create comprehensive stories for all 20 UI components, showcasing variants, sizes, states, and usage patterns",
           "tasks": [
-            "TEST-001"
+            "IMPL-003",
+            "IMPL-004",
+            "IMPL-005",
+            "IMPL-006",
+            "IMPL-007",
+            "IMPL-008",
+            "IMPL-009",
+            "IMPL-010",
+            "IMPL-011",
+            "IMPL-012",
+            "IMPL-013",
+            "IMPL-014",
+            "IMPL-015",
+            "IMPL-016",
+            "IMPL-017",
+            "IMPL-018",
+            "IMPL-019",
+            "IMPL-020"
           ],
           "deliverables": [
-            "All tests passing",
-            "Coverage meets requirements"
-          ]
+            "20 component story files created",
+            "All variants and sizes demonstrated",
+            "Interactive controls configured",
+            "Documentation auto-generated",
+            "Examples show real usage"
+          ],
+          "complexity": "high",
+          "dependencies": ["Phase 1", "Phase 2"]
         },
         {
           "phase": 4,
-          "name": "Phase 4: Documentation",
-          "description": "Complete documentation for users and developers",
+          "name": "Phase 4: Widget Stories",
+          "description": "Create stories for existing widgets (ComingSoonCard, ThemeToggle) with proper context mocking",
           "tasks": [
-            "DOC-001"
+            "IMPL-021",
+            "IMPL-022"
           ],
           "deliverables": [
-            "All documentation complete",
-            "Examples provided"
-          ]
+            "ComingSoonCard widget story with config variations",
+            "ThemeToggle widget story with options",
+            "Widget context properly mocked",
+            "Theme variations testable"
+          ],
+          "complexity": "low",
+          "dependencies": ["Phase 2", "Phase 3"]
+        },
+        {
+          "phase": 5,
+          "name": "Phase 5: Testing & Verification",
+          "description": "Test Storybook functionality, verify all stories render, test addons, verify builds, and test Turborepo integration",
+          "tasks": [
+            "TEST-001",
+            "TEST-002",
+            "TEST-003",
+            "TEST-004",
+            "TEST-005",
+            "TEST-006",
+            "TEST-007",
+            "TEST-008",
+            "TEST-009",
+            "TEST-010"
+          ],
+          "deliverables": [
+            "All stories render without errors",
+            "All addons functional",
+            "Build completes successfully",
+            "Turborepo integration verified",
+            "Theme switching works",
+            "Accessibility testing functional"
+          ],
+          "complexity": "medium",
+          "dependencies": ["Phase 3", "Phase 4"]
+        },
+        {
+          "phase": 6,
+          "name": "Phase 6: Documentation",
+          "description": "Update README files and component documentation with Storybook information and usage instructions",
+          "tasks": [
+            "DOC-001",
+            "DOC-002",
+            "DOC-003",
+            "DOC-004"
+          ],
+          "deliverables": [
+            "packages/ui/README.md updated",
+            "Root README.md updated",
+            "COMPONENTS.md updated with Storybook reference",
+            "Decorator usage documented"
+          ],
+          "complexity": "low",
+          "dependencies": ["Phase 5"]
         }
       ]
     },
     "7_testing_strategy": {
       "unit_tests": [
-        "Test individual functions and methods in isolation",
-        "Verify input validation and error handling",
-        "Test edge cases and boundary conditions",
-        "Achieve minimum 80% code coverage"
+        "Not applicable - Storybook serves as visual testing tool"
       ],
       "integration_tests": [
-        "Test component interactions and data flow",
-        "Verify end-to-end functionality",
-        "Test integration with existing systems"
+        "Visual regression: Manually verify all stories render correctly",
+        "Addon functionality: Test Controls, Actions, Docs, A11y, Viewport addons",
+        "Context mocking: Verify decorators provide correct context to components",
+        "Theme switching: Verify components render correctly in light/dark themes"
       ],
       "end_to_end_tests": [
-        "Not applicable"
+        "Storybook build: Verify npm run build-storybook completes successfully",
+        "Turborepo integration: Verify storybook task runs from root",
+        "Story navigation: Verify all stories are accessible in Storybook UI"
       ],
       "edge_case_scenarios": [
         {
-          "scenario": "Empty or null input provided",
-          "setup": "Call function with None or empty string",
-          "expected_behavior": "Function validates input and returns appropriate error",
-          "verification": "Assert error message and status code",
-          "error_handling": "ValueError or ValidationError"
+          "scenario": "Component with missing CSS imports",
+          "setup": "Story renders component without importing globals.css",
+          "expected_behavior": "Component renders but without Tailwind styles",
+          "verification": "Check preview.tsx or preview-head.html imports CSS",
+          "error_handling": "Ensure CSS is imported in preview configuration"
         },
         {
-          "scenario": "Invalid input format provided",
-          "setup": "Call function with malformed or incorrect data type",
-          "expected_behavior": "Function validates input type and returns error",
-          "verification": "Assert error message indicates invalid format",
-          "error_handling": "TypeError or ValidationError"
+          "scenario": "Widget story without WidgetProvider",
+          "setup": "Widget story tries to use useWidget() without decorator",
+          "expected_behavior": "Error thrown: useWidget must be used within WidgetProvider",
+          "verification": "Error message is clear and helpful",
+          "error_handling": "Always use WidgetDecorator for widget stories"
         },
         {
-          "scenario": "Boundary conditions at limits",
-          "setup": "Test with minimum and maximum allowed values",
-          "expected_behavior": "Function handles boundary values correctly",
-          "verification": "Assert results are within expected range",
-          "error_handling": "No error expected for valid boundaries"
+          "scenario": "Storybook build with TypeScript errors",
+          "setup": "Component has TypeScript error, Storybook tries to build",
+          "expected_behavior": "Build fails with clear TypeScript error message",
+          "verification": "TypeScript errors are visible in build output",
+          "error_handling": "Fix TypeScript errors before building Storybook"
+        },
+        {
+          "scenario": "Turborepo cache invalidation",
+          "setup": "Component changes, but Turborepo uses cached Storybook build",
+          "expected_behavior": "Turborepo detects changes and rebuilds",
+          "verification": "Changes to component files trigger Storybook rebuild",
+          "error_handling": "Clear Turborepo cache if needed: turbo clean"
         }
       ]
     },
     "8_success_criteria": {
       "functional_requirements": [
         {
-          "requirement": "Feature implementation complete",
-          "metric": "All requirements implemented",
-          "target": "100% of specified requirements",
-          "validation": "Manual verification against requirements list"
+          "requirement": "Storybook 8 installed and running",
+          "metric": "npm run storybook starts dev server",
+          "target": "Dev server starts on port 6006 without errors",
+          "validation": "Run npm run storybook and verify server starts"
         },
         {
-          "requirement": "Integration successful",
-          "metric": "Feature works with existing system",
-          "target": "No breaking changes to existing functionality",
-          "validation": "Run full test suite"
+          "requirement": "React 19 compatibility",
+          "metric": "No React version conflicts",
+          "target": "All components render without React warnings",
+          "validation": "Check browser console for React warnings"
         },
         {
-          "requirement": "Storybook 8 for packages/ui",
-          "metric": "Functionality verified",
-          "target": "Works as specified",
-          "validation": "Test cases for: Storybook 8 for packages/ui"
+          "requirement": "Turborepo integration",
+          "metric": "Storybook task in Turborepo pipeline",
+          "target": "npm run storybook works from root, respects dependencies",
+          "validation": "Run from root and verify it works"
         },
         {
-          "requirement": "Support for React 19",
-          "metric": "Functionality verified",
-          "target": "Works as specified",
-          "validation": "Test cases for: Support for React 19"
+          "requirement": "Essential addons functional",
+          "metric": "All addons work correctly",
+          "target": "Controls, Actions, Docs, A11y, Viewport all functional",
+          "validation": "Test each addon in Storybook UI"
         },
         {
-          "requirement": "Integration with Turborepo",
-          "metric": "Functionality verified",
-          "target": "Works as specified",
-          "validation": "Test cases for: Integration with Turborepo"
+          "requirement": "UI component stories complete",
+          "metric": "Stories for all 20 components",
+          "target": "100% of UI components have stories",
+          "validation": "Count story files, verify all components covered"
+        },
+        {
+          "requirement": "Widget stories with context mocking",
+          "metric": "Widget stories use decorators",
+          "target": "All widget stories render with proper context",
+          "validation": "Verify ComingSoonCard and ThemeToggle stories work"
         }
       ],
       "quality_requirements": [
         {
-          "requirement": "Code coverage",
-          "metric": "Line coverage",
-          "target": ">80%",
-          "validation": "Run coverage tool"
+          "requirement": "Storybook build success",
+          "metric": "Build completes without errors",
+          "target": "npm run build-storybook completes successfully",
+          "validation": "Run build command and verify output"
+        },
+        {
+          "requirement": "Type safety",
+          "metric": "No TypeScript errors in stories",
+          "target": "Zero TypeScript errors",
+          "validation": "Run tsc --noEmit in packages/ui"
         },
         {
           "requirement": "Code quality",
           "metric": "Linter passes",
-          "target": "Zero linting errors",
-          "validation": "Run linter"
-        },
-        {
-          "requirement": "Type safety",
-          "metric": "Type checker passes",
-          "target": "Zero type errors",
-          "validation": "Run type checker"
+          "target": "Zero linting errors in story files",
+          "validation": "Run eslint on story files"
         }
       ],
       "performance_requirements": [
         {
-          "requirement": "Response time",
-          "metric": "Execution time",
-          "target": "< 1 second for typical operations",
-          "validation": "Performance tests"
+          "requirement": "Storybook dev server startup",
+          "metric": "Server startup performance",
+          "target": "Fast startup (acceptable for development workflow)",
+          "validation": "Verify dev server starts without excessive delay"
+        },
+        {
+          "requirement": "Hot module reload",
+          "metric": "HMR performance",
+          "target": "Fast HMR (acceptable for development workflow)",
+          "validation": "Verify changes reflect quickly after file save"
         }
       ],
       "security_requirements": [
         {
-          "requirement": "Input validation",
-          "metric": "All inputs validated",
-          "target": "100% validation coverage",
-          "validation": "Security review"
+          "requirement": "Dev-only tool",
+          "metric": "Storybook not in production",
+          "target": "Storybook dependencies are devDependencies only",
+          "validation": "Verify package.json has storybook in devDependencies"
         }
       ]
     },
     "9_implementation_checklist": {
       "pre_implementation": [
-        "\u2610 Review complete plan for gaps or ambiguities",
-        "\u2610 Verify all requirements are clear and testable",
-        "\u2610 Set up development environment with required dependencies"
+        "☐ Review Storybook 8 documentation for React 19 compatibility",
+        "☐ Verify current React version (should be 19.0.0)",
+        "☐ Check Turborepo version compatibility",
+        "☐ Review existing component structure in packages/ui"
       ],
       "phase_1": [
-        "\u2610 SETUP-001: Create initial project structure and setup development environment with required dependencies"
+        "☐ SETUP-001: Install Storybook 8 and addons",
+        "☐ SETUP-002: Initialize .storybook/main.ts with Vite builder",
+        "☐ SETUP-003: Configure preview.tsx with CSS imports and decorators",
+        "☐ SETUP-004: Add storybook tasks to turbo.json",
+        "☐ SETUP-005: Add npm scripts to package.json files",
+        "☐ Verify: npm run storybook starts successfully"
       ],
       "phase_2": [
-        "\u2610 LOGIC-001: Implement core feature functionality following existing project patterns and architecture"
+        "☐ IMPL-001: Create PlatformDecorator with mock context",
+        "☐ IMPL-002: Create WidgetDecorator with mock widget context",
+        "☐ Register decorators in preview.tsx",
+        "☐ Verify: Decorators work in test story"
       ],
       "phase_3": [
-        "\u2610 TEST-001: Write unit tests for all new functionality with minimum 80% code coverage",
-        "\u2610 TEST-002: Write integration tests to verify end-to-end functionality and component interactions"
+        "☐ IMPL-003: Button story (all variants and sizes)",
+        "☐ IMPL-004: Card story (with all sub-components)",
+        "☐ IMPL-005: Input story (types and states)",
+        "☐ IMPL-006: Select story (with groups and separators)",
+        "☐ IMPL-007: Checkbox and Switch stories",
+        "☐ IMPL-008: Textarea story",
+        "☐ IMPL-009: Label story",
+        "☐ IMPL-010: Alert story",
+        "☐ IMPL-011: Toast story",
+        "☐ IMPL-012: Spinner story",
+        "☐ IMPL-013: Skeleton story",
+        "☐ IMPL-014: Dialog story",
+        "☐ IMPL-015: DropdownMenu story",
+        "☐ IMPL-016: Tooltip story",
+        "☐ IMPL-017: Badge story",
+        "☐ IMPL-018: Nav story",
+        "☐ IMPL-019: ThemeToggle story",
+        "☐ IMPL-020: TenantSwitcher story",
+        "☐ Verify: All 20 component stories render correctly"
       ],
       "phase_4": [
-        "\u2610 DOC-001: Update documentation including README, API docs, and inline code comments for all public interfaces"
+        "☐ IMPL-021: ComingSoonCard widget story",
+        "☐ IMPL-022: ThemeToggle widget story",
+        "☐ Verify: Widget stories render with proper context"
+      ],
+      "phase_5": [
+        "☐ TEST-001: Verify dev server starts",
+        "☐ TEST-002: Verify all component stories render",
+        "☐ TEST-003: Verify widget stories render",
+        "☐ TEST-004: Test Controls addon",
+        "☐ TEST-005: Test A11y addon",
+        "☐ TEST-006: Test Viewport addon",
+        "☐ TEST-007: Test Docs addon",
+        "☐ TEST-008: Test theme switching",
+        "☐ TEST-009: Verify build completes",
+        "☐ TEST-010: Verify Turborepo integration"
+      ],
+      "phase_6": [
+        "☐ DOC-001: Update packages/ui/README.md",
+        "☐ DOC-002: Update root README.md",
+        "☐ DOC-003: Update COMPONENTS.md",
+        "☐ DOC-004: Document decorator patterns"
       ],
       "finalization": [
-        "\u2610 All tests passing (unit + integration)",
-        "\u2610 Code review completed and approved",
-        "\u2610 Documentation updated and complete",
-        "\u2610 Changelog entry created with version bump",
-        "\u2610 Final verification against success criteria"
+        "☐ All stories render without errors",
+        "☐ Storybook build completes successfully",
+        "☐ TypeScript checks pass",
+        "☐ Linter passes",
+        "☐ Documentation updated",
+        "☐ Changelog entry created",
+        "☐ Final verification: Run full test suite to ensure no regressions"
       ]
     }
   }
